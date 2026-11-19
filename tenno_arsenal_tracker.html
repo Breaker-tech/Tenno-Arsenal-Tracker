@@ -6,1926 +6,1913 @@
     <title>Tenno Arsenal Tracker — Warframe</title>
     <style>
         /* =====================================================================
-           1. VARIABLES & DESIGN TOKENS (THÈME SOMBRE WARFRAME / OROKIN)
+           1. DESIGN TOKENS (DARK SLATE / OBSIDIAN + CYAN & OROKIN GOLD)
            ===================================================================== */
         :root {
-            --bg-main: #090d16;
-            --bg-header: #0d1322;
-            --bg-card: #111827;
-            --bg-card-hover: #162036;
-            --bg-input: #070a12;
-            --border-color: #1f2937;
-            --border-light: #334155;
-            --text-primary: #f8fafc;
+            --bg-obsidian: #0b0f17;
+            --bg-slate: #121826;
+            --bg-slate-elevated: #182134;
+            --bg-input: #080c13;
+            --border-subtle: #1e293b;
+            --border-strong: #334155;
+            --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            --cyan: #00d2ff;
-            --cyan-dim: rgba(0, 210, 255, 0.14);
-            --cyan-border: rgba(0, 210, 255, 0.45);
-            --orokin: #d4af37;
-            --orokin-bright: #facc15;
-            --orokin-dim: rgba(212, 175, 55, 0.16);
-            --orokin-border: rgba(212, 175, 55, 0.5);
-            --danger: #ef4444;
-            --danger-dim: rgba(239, 68, 68, 0.15);
-            --radius-lg: 14px;
-            --radius-md: 10px;
+            --cyan: #38bdf8;
+            --cyan-soft: rgba(56, 189, 248, 0.14);
+            --cyan-ring: rgba(56, 189, 248, 0.45);
+            --gold: #eab308;
+            --gold-soft: rgba(234, 179, 8, 0.15);
+            --gold-ring: rgba(234, 179, 8, 0.5);
+            --emerald: #34d399;
+            --emerald-soft: rgba(52, 211, 153, 0.14);
+            --rose: #f87171;
+            --rose-soft: rgba(248, 113, 113, 0.14);
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 9px;
             --radius-sm: 6px;
-            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.45);
+            --shadow-panel: 0 10px 28px rgba(0, 0, 0, 0.42);
         }
 
         /* =====================================================================
            2. RESET & BASE STYLES
            ===================================================================== */
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-obsidian);
             color: var(--text-primary);
             line-height: 1.5;
             min-height: 100vh;
             background-image:
-                radial-gradient(circle at 12% 10%, rgba(0, 210, 255, 0.06) 0%, transparent 42%),
-                radial-gradient(circle at 88% 90%, rgba(212, 175, 55, 0.06) 0%, transparent 42%);
+                radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 90% 95%, rgba(234, 179, 8, 0.06) 0%, transparent 42%);
         }
 
-        button, input, select {
+        button, input, select, textarea {
             font-family: inherit;
-        }
-
-        /* =====================================================================
-           3. HEADER & TOP NAVIGATION
-           ===================================================================== */
-        .app-header {
-            background-color: rgba(13, 19, 34, 0.94);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            color: inherit;
         }
 
         .container {
-            max-width: 1320px;
+            width: 100%;
+            max-width: 1360px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 18px;
         }
 
-        .header-inner {
+        /* =====================================================================
+           3. TOP HEADER BAR
+           ===================================================================== */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            background-color: rgba(11, 15, 23, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .topbar-inner {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 14px;
             padding: 14px 0;
         }
 
-        .brand {
+        .brand-group {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .brand-logo {
+        .brand-emblem {
             width: 42px;
             height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.18), rgba(212, 175, 55, 0.18));
-            border: 1px solid var(--cyan-border);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--cyan-soft), var(--gold-soft));
+            border: 1px solid var(--cyan-ring);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
 
-        .brand-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-primary);
+        .brand-name-row {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 8px;
         }
 
-        .brand-badge {
-            font-size: 0.7rem;
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .brand-tag {
+            font-size: 0.68rem;
             font-weight: 700;
             padding: 2px 8px;
             border-radius: 999px;
-            background: var(--cyan-dim);
-            color: var(--cyan);
-            border: 1px solid var(--cyan-border);
-            letter-spacing: 0.03em;
+            background-color: var(--gold-soft);
+            color: var(--gold);
+            border: 1px solid var(--gold-ring);
         }
 
-        .brand-subtitle {
+        .brand-desc {
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
-        .header-controls {
+        .toolbar-actions {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        /* Language Switcher */
-        .lang-switch {
+        .lang-toggle {
             display: inline-flex;
             background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 3px;
         }
 
-        .lang-btn {
+        .lang-option {
             border: none;
             background: transparent;
             color: var(--text-secondary);
             font-size: 0.78rem;
             font-weight: 700;
-            padding: 6px 12px;
-            border-radius: 7px;
+            padding: 6px 11px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.18s ease;
         }
 
-        .lang-btn:hover {
+        .lang-option:hover {
             color: var(--text-primary);
         }
 
-        .lang-btn.active {
+        .lang-option.active {
             background-color: var(--cyan);
-            color: #050811;
-            box-shadow: 0 2px 8px rgba(0, 210, 255, 0.35);
+            color: #06101b;
         }
 
-        /* Action Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 8px 13px;
+            padding: 8px 12px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-            background-color: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            background-color: var(--bg-slate);
             color: var(--text-primary);
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.18s ease;
+            white-space: nowrap;
         }
 
         .btn:hover {
-            background-color: var(--bg-card-hover);
+            background-color: var(--bg-slate-elevated);
             border-color: var(--cyan);
         }
 
-        .btn-orokin {
-            background-color: var(--orokin-dim);
-            border-color: var(--orokin-border);
-            color: var(--orokin-bright);
+        .btn-cyan {
+            background-color: var(--cyan-soft);
+            border-color: var(--cyan-ring);
+            color: var(--cyan);
         }
 
-        .btn-orokin:hover {
-            background-color: rgba(212, 175, 55, 0.28);
-            border-color: var(--orokin-bright);
+        .btn-cyan:hover {
+            background-color: rgba(56, 189, 248, 0.24);
+        }
+
+        .btn-gold {
+            background-color: var(--gold-soft);
+            border-color: var(--gold-ring);
+            color: var(--gold);
+        }
+
+        .btn-gold:hover {
+            background-color: rgba(234, 179, 8, 0.25);
         }
 
         .btn-danger:hover {
-            background-color: var(--danger-dim);
-            border-color: var(--danger);
-            color: #fca5a5;
+            background-color: var(--rose-soft);
+            border-color: var(--rose);
+            color: var(--rose);
         }
 
         /* =====================================================================
-           4. DASHBOARD STATS SECTION
+           4. STATUS FEEDBACK BANNER
            ===================================================================== */
-        .main-content {
-            padding: 24px 0 60px;
+        .workspace {
+            padding: 20px 0 64px;
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 20px;
         }
 
-        .stats-panel {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
+        .status-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 11px 16px;
             border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-card);
+            background-color: var(--bg-slate);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
         }
 
-        .stats-top {
+        .status-banner.info {
+            border-color: var(--cyan-ring);
+            background-color: rgba(56, 189, 248, 0.06);
+        }
+
+        .status-banner.success {
+            border-color: rgba(52, 211, 153, 0.45);
+            background-color: rgba(52, 211, 153, 0.07);
+            color: var(--text-primary);
+        }
+
+        .status-banner.warning {
+            border-color: var(--gold-ring);
+            background-color: rgba(234, 179, 8, 0.07);
+            color: var(--text-primary);
+        }
+
+        .status-banner.error {
+            border-color: rgba(248, 113, 113, 0.5);
+            background-color: rgba(248, 113, 113, 0.08);
+            color: #fecaca;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--cyan);
+            flex-shrink: 0;
+        }
+
+        .status-banner.success .status-dot { background-color: var(--emerald); }
+        .status-banner.warning .status-dot { background-color: var(--gold); }
+        .status-banner.error .status-dot { background-color: var(--rose); }
+
+        /* =====================================================================
+           5. GLOBAL & PER-CATEGORY PROGRESS SECTION
+           ===================================================================== */
+        .panel {
+            background-color: var(--bg-slate);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-panel);
+        }
+
+        .global-header {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 14px;
+            gap: 14px;
+            margin-bottom: 12px;
         }
 
-        .stats-title {
-            font-size: 0.82rem;
+        .section-kicker {
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--text-secondary);
-            font-weight: 700;
         }
 
-        .stats-numbers {
+        .global-metrics {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 18px;
+            gap: 10px;
         }
 
-        .stat-pill {
-            display: flex;
+        .metric-chip {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.88rem;
+            gap: 7px;
             background-color: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+        }
+
+        .chip-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .chip-dot.mastered { background-color: var(--gold); }
+        .chip-dot.owned { background-color: var(--cyan); }
+        .chip-dot.missing { background-color: #475569; }
+
+        .xp-highlight {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--cyan);
+            background-color: var(--cyan-soft);
+            border: 1px solid var(--cyan-ring);
             padding: 6px 12px;
             border-radius: 999px;
-            border: 1px solid var(--border-color);
         }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .dot-mastered { background-color: var(--orokin-bright); box-shadow: 0 0 8px var(--orokin); }
-        .dot-owned { background-color: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-        .dot-missing { background-color: #475569; }
-
-        .stat-pct {
-            font-size: 1.45rem;
+        .percent-highlight {
+            font-size: 1.35rem;
             font-weight: 800;
-            color: var(--orokin-bright);
+            color: var(--gold);
+            margin-left: 4px;
         }
 
-        .progress-track {
+        .stacked-bar {
             width: 100%;
-            height: 12px;
+            height: 11px;
             background-color: var(--bg-input);
+            border: 1px solid var(--border-subtle);
             border-radius: 999px;
             overflow: hidden;
             display: flex;
-            border: 1px solid var(--border-color);
         }
 
-        .progress-fill-mastered {
+        .bar-seg-mastered {
             height: 100%;
-            background: linear-gradient(90deg, #ca8a04, #facc15);
-            transition: width 0.35s ease;
+            background: linear-gradient(90deg, #ca8a04, var(--gold));
+            transition: width 0.3s ease;
         }
 
-        .progress-fill-owned {
+        .bar-seg-owned {
             height: 100%;
-            background: linear-gradient(90deg, #0284c7, #00d2ff);
-            transition: width 0.35s ease;
+            background: linear-gradient(90deg, #0284c7, var(--cyan));
+            transition: width 0.3s ease;
+        }
+
+        /* Per-Category Breakdown Grid */
+        .category-bars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .cat-mini-card {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: border-color 0.18s ease, transform 0.15s ease;
+        }
+
+        .cat-mini-card:hover {
+            border-color: var(--cyan-ring);
+            transform: translateY(-1px);
+        }
+
+        .cat-mini-card.selected {
+            border-color: var(--cyan);
+            background-color: rgba(56, 189, 248, 0.06);
+        }
+
+        .cat-mini-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cat-mini-pct {
+            color: var(--gold);
+            font-size: 0.76rem;
+        }
+
+        .mini-track {
+            width: 100%;
+            height: 6px;
+            background-color: #131b2e;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--gold));
+            transition: width 0.3s ease;
+        }
+
+        .cat-mini-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 5px;
         }
 
         /* =====================================================================
-           5. FILTERS & CONTROLS BAR
+           6. CATEGORY TABS, QUICK FILTERS & BULK CONTROLS
            ===================================================================== */
-        .filters-panel {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 18px;
+        .controls-stack {
             display: flex;
             flex-direction: column;
             gap: 14px;
-            box-shadow: var(--shadow-card);
         }
 
-        .category-tabs {
+        .tabs-row {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
 
-        .tab-btn {
-            padding: 8px 14px;
+        .tab-pill {
+            padding: 8px 13px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-subtle);
             background-color: var(--bg-input);
             color: var(--text-secondary);
             font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
+            transition: all 0.18s ease;
         }
 
-        .tab-btn:hover {
+        .tab-pill:hover {
             color: var(--text-primary);
-            border-color: var(--border-light);
+            border-color: var(--border-strong);
         }
 
-        .tab-btn.active {
+        .tab-pill.active {
             background-color: var(--cyan);
-            color: #050811;
             border-color: var(--cyan);
+            color: #06101b;
             font-weight: 700;
         }
 
-        .tab-count {
-            font-size: 0.72rem;
+        .tab-badge {
+            font-size: 0.7rem;
             padding: 1px 6px;
             border-radius: 999px;
-            background-color: rgba(0, 0, 0, 0.25);
+            background-color: rgba(15, 23, 42, 0.35);
         }
 
-        .filter-row {
+        .quick-filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .quick-filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .qfilter-btn {
+            padding: 6px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle);
+            background-color: var(--bg-input);
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .qfilter-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-strong);
+        }
+
+        .qfilter-btn.active {
+            background-color: var(--gold-soft);
+            border-color: var(--gold-ring);
+            color: var(--gold);
+        }
+
+        .search-and-bulk {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 12px;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
             align-items: center;
         }
 
-        @media (max-width: 900px) {
-            .filter-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .filter-row {
+        @media (max-width: 760px) {
+            .search-and-bulk {
                 grid-template-columns: 1fr;
             }
         }
 
-        .input-control, .select-control {
+        .search-box {
             width: 100%;
             padding: 10px 14px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--border-strong);
             background-color: var(--bg-input);
             color: var(--text-primary);
             font-size: 0.86rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.18s ease;
         }
 
-        .input-control:focus, .select-control:focus {
+        .search-box:focus {
             border-color: var(--cyan);
         }
 
-        .results-meta {
+        .filter-footer-meta {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
         }
 
         /* =====================================================================
-           6. EQUIPMENT CARDS GRID
+           7. EQUIPMENT CARDS GRID
            ===================================================================== */
-        .items-grid {
+        .catalog-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(315px, 1fr));
+            gap: 15px;
         }
 
-        .item-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
+        .eq-card {
+            background-color: var(--bg-slate);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 14px;
-            transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+            gap: 13px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+            transition: transform 0.16s ease, border-color 0.18s ease, background-color 0.18s ease;
         }
 
-        .item-card:hover {
+        .eq-card:hover {
             transform: translateY(-2px);
-            background-color: var(--bg-card-hover);
+            background-color: var(--bg-slate-elevated);
         }
 
-        .item-card.status-owned {
-            border-color: var(--cyan-border);
-            box-shadow: 0 0 18px rgba(0, 210, 255, 0.14);
+        .eq-card.state-owned {
+            border-color: var(--cyan-ring);
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.12);
         }
 
-        .item-card.status-mastered {
-            border-color: var(--orokin-border);
-            box-shadow: 0 0 18px rgba(212, 175, 55, 0.16);
+        .eq-card.state-mastered {
+            border-color: var(--gold-ring);
+            box-shadow: 0 0 18px rgba(234, 179, 8, 0.13);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .card-badges {
+        .eq-badges {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 6px;
             margin-bottom: 6px;
         }
 
-        .badge {
-            font-size: 0.68rem;
+        .pill {
+            font-size: 0.67rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.04em;
             padding: 2px 7px;
             border-radius: var(--radius-sm);
-            letter-spacing: 0.04em;
         }
 
-        .badge-cat {
-            background-color: rgba(148, 163, 184, 0.14);
+        .pill-cat {
+            background-color: rgba(148, 163, 184, 0.12);
             color: #cbd5e1;
-            border: 1px solid rgba(148, 163, 184, 0.25);
+            border: 1px solid rgba(148, 163, 184, 0.24);
         }
 
-        .badge-mr {
-            background-color: var(--cyan-dim);
+        .pill-mr {
+            background-color: var(--cyan-soft);
             color: var(--cyan);
-            border: 1px solid var(--cyan-border);
+            border: 1px solid var(--cyan-ring);
         }
 
-        .badge-prime {
-            background-color: var(--orokin-dim);
-            color: var(--orokin-bright);
-            border: 1px solid var(--orokin-border);
+        .pill-prime {
+            background-color: var(--gold-soft);
+            color: var(--gold);
+            border: 1px solid var(--gold-ring);
         }
 
-        .badge-vault {
-            background-color: rgba(168, 85, 247, 0.15);
-            color: #d8b4fe;
-            border: 1px solid rgba(168, 85, 247, 0.4);
+        .pill-custom {
+            background-color: var(--emerald-soft);
+            color: var(--emerald);
+            border: 1px solid rgba(52, 211, 153, 0.4);
         }
 
-        .item-name {
-            font-size: 1.12rem;
+        .eq-title {
+            font-size: 1.08rem;
             font-weight: 700;
-            color: var(--text-primary);
             line-height: 1.25;
         }
 
-        .item-alt-name {
+        .eq-subtitle {
             font-size: 0.76rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
-        /* 3-State Interactive Button Bar */
-        .state-selector {
+        /* 3-State Segmented Control */
+        .tri-state {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            gap: 5px;
             background-color: var(--bg-input);
             padding: 4px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-subtle);
         }
 
-        .state-btn {
+        .tri-btn {
             border: 1px solid transparent;
             background: transparent;
             color: var(--text-secondary);
             font-size: 0.74rem;
             font-weight: 600;
-            padding: 6px 4px;
-            border-radius: 7px;
+            padding: 7px 4px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.15s ease;
-            text-align: center;
+            transition: all 0.14s ease;
         }
 
-        .state-btn:hover {
+        .tri-btn:hover {
             color: var(--text-primary);
             background-color: rgba(255, 255, 255, 0.04);
         }
 
-        .state-btn.active-missing {
+        .tri-btn.active-missing {
             background-color: #1e293b;
-            color: #f1f5f9;
+            color: #f8fafc;
             border-color: #475569;
         }
 
-        .state-btn.active-owned {
+        .tri-btn.active-owned {
             background-color: var(--cyan);
-            color: #050811;
+            color: #06101b;
             font-weight: 700;
         }
 
-        .state-btn.active-mastered {
-            background-color: var(--orokin-bright);
-            color: #050811;
+        .tri-btn.active-mastered {
+            background-color: var(--gold);
+            color: #140f02;
             font-weight: 700;
         }
 
-        /* How to Obtain Box */
-        .obtain-box {
-            background-color: rgba(7, 10, 18, 0.75);
-            border: 1px solid var(--border-color);
+        /* Farm / Acquisition Source Box */
+        .source-box {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 10px 12px;
         }
 
-        .obtain-header {
+        .source-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
+            gap: 8px;
+            margin-bottom: 4px;
         }
 
-        .obtain-label {
-            font-size: 0.74rem;
+        .source-label {
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--cyan);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .obtain-text {
-            font-size: 0.82rem;
-            color: #cbd5e1;
-            margin-top: 6px;
-            line-height: 1.45;
-        }
-
-        .obtain-details {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed var(--border-color);
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            display: none;
-        }
-
-        .obtain-details.open {
-            display: block;
-        }
-
-        .obtain-details ul {
-            padding-left: 16px;
-            margin-top: 4px;
-        }
-
-        .obtain-details li {
-            margin-bottom: 3px;
-        }
-
-        .wiki-link {
-            display: inline-block;
-            margin-top: 6px;
-            color: var(--orokin-bright);
-            text-decoration: none;
+        .source-xp {
+            font-size: 0.7rem;
+            color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.75rem;
         }
 
-        .wiki-link:hover {
+        .source-text {
+            font-size: 0.81rem;
+            color: #cbd5e1;
+            line-height: 1.42;
+        }
+
+        .card-actions-foot {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 6px;
+        }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--rose);
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 2px 4px;
+        }
+
+        .link-btn:hover {
             text-decoration: underline;
         }
 
-        /* Empty State */
-        .empty-state {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 48px 20px;
+        /* Empty Box */
+        .empty-box {
+            background-color: var(--bg-slate);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 44px 20px;
             text-align: center;
         }
 
-        .empty-state h3 {
-            font-size: 1.1rem;
+        .empty-box h3 {
+            font-size: 1.05rem;
             margin-bottom: 6px;
         }
 
-        .empty-state p {
+        .empty-box p {
             color: var(--text-secondary);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             margin-bottom: 16px;
         }
 
         /* =====================================================================
-           7. CUSTOM MODAL & TOAST NOTIFICATIONS
+           8. MODALS (CUSTOM ENTRY & CONFIRMATION)
            ===================================================================== */
-        .modal-backdrop {
+        .modal-overlay {
             position: fixed;
             inset: 0;
-            background-color: rgba(0, 0, 0, 0.78);
+            background-color: rgba(2, 6, 14, 0.8);
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 18px;
             z-index: 200;
         }
 
-        .modal-backdrop.open {
+        .modal-overlay.open {
             display: flex;
         }
 
-        .modal-box {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            max-width: 440px;
+        .modal-card {
             width: 100%;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+            max-width: 480px;
+            background-color: var(--bg-slate);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
         }
 
-        .modal-title {
-            font-size: 1.15rem;
+        .modal-heading {
+            font-size: 1.12rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .modal-body {
-            font-size: 0.88rem;
+        .modal-copy {
+            font-size: 0.86rem;
             color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.5;
+            margin-bottom: 16px;
         }
 
-        .modal-actions {
+        .form-grid {
             display: flex;
-            justify-content: flex-end;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-field label {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+        .checkbox-line {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
-            z-index: 300;
-            pointer-events: none;
-        }
-
-        .toast {
-            background-color: #162036;
-            border: 1px solid var(--cyan-border);
-            color: var(--text-primary);
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
             font-size: 0.82rem;
-            font-weight: 600;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.25s ease;
+            color: var(--text-primary);
+            cursor: pointer;
         }
 
-        .toast.orokin {
-            border-color: var(--orokin-border);
-            color: var(--orokin-bright);
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- TOAST NOTIFICATIONS -->
-    <div id="toast-container" class="toast-container"></div>
-
-    <!-- HEADER -->
-    <header class="app-header">
+    <!-- TOP BAR -->
+    <header class="topbar">
         <div class="container">
-            <div class="header-inner">
-                <div class="brand">
-                    <div class="brand-logo" aria-hidden="true">
-                        <!-- Custom Tenno Lotus SVG Emblem -->
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2">
-                            <path d="M12 2L15 8.5L21 10L16 15L17.5 21L12 18L6.5 21L8 15L3 10L9 8.5L12 2Z" stroke-linejoin="round"/>
-                            <circle cx="12" cy="12" r="2.5" fill="#00d2ff" stroke="none"/>
+            <div class="topbar-inner">
+                <div class="brand-group">
+                    <div class="brand-emblem" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2">
+                            <path d="M12 2L14.8 8.6L22 9.4L16.5 14.2L18.2 21.2L12 17.5L5.8 21.2L7.5 14.2L2 9.4L9.2 8.6L12 2Z" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="2.3" fill="#38bdf8" stroke="none"/>
                         </svg>
                     </div>
                     <div>
-                        <div class="brand-title">
-                            <span>TENNO ARSENAL TRACKER</span>
-                            <span id="codex-status-badge" class="brand-badge">CODEX PRÊT</span>
+                        <div class="brand-name-row">
+                            <span class="brand-title">Tenno Arsenal Tracker</span>
+                            <span class="brand-tag">WARFRAME</span>
                         </div>
-                        <div id="ui-subtitle" class="brand-subtitle">Suivi d'équipement, Maîtrise et guide d'obtention Warframe</div>
+                        <div id="txt-subtitle" class="brand-desc">Suivi d'équipement, Maîtrise &amp; sources de farm</div>
                     </div>
                 </div>
 
-                <div class="header-controls">
-                    <!-- Language Toggle -->
-                    <div class="lang-switch" role="group" aria-label="Language">
-                        <button type="button" id="btn-lang-fr" class="lang-btn active" onclick="setLanguage('fr')">FR</button>
-                        <button type="button" id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+                <div class="toolbar-actions">
+                    <div class="lang-toggle" role="group" aria-label="Language switcher">
+                        <button type="button" id="lang-fr" class="lang-option active" onclick="changeLanguage('fr')">FR</button>
+                        <button type="button" id="lang-en" class="lang-option" onclick="changeLanguage('en')">EN</button>
                     </div>
 
-                    <!-- Backup Buttons -->
-                    <button type="button" class="btn" onclick="exportBackup()">
+                    <button type="button" class="btn btn-cyan" onclick="openCustomModal()">
+                        <span>+</span>
+                        <span id="txt-add-custom">Ajouter</span>
+                    </button>
+
+                    <button type="button" class="btn" onclick="exportSaveFile()">
                         <span>⬇</span>
-                        <span id="ui-export">Exporter JSON</span>
+                        <span id="txt-export">Exporter JSON</span>
                     </button>
 
                     <label class="btn" style="cursor: pointer;">
                         <span>⬆</span>
-                        <span id="ui-import">Importer JSON</span>
-                        <input type="file" id="import-input" accept=".json" style="display: none;" onchange="importBackup(event)">
+                        <span id="txt-import">Importer JSON</span>
+                        <input type="file" id="import-file-input" accept=".json,application/json" style="display: none;" onchange="importSaveFile(event)">
                     </label>
 
-                    <button type="button" class="btn btn-danger" onclick="confirmReset()">
+                    <button type="button" class="btn btn-danger" onclick="requestResetAll()">
                         <span>↺</span>
-                        <span id="ui-reset">Réinitialiser</span>
+                        <span id="txt-reset">Réinitialiser</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="container main-content">
+    <!-- MAIN WORKSPACE -->
+    <main class="container workspace">
 
-        <!-- GLOBAL STATS -->
-        <section class="stats-panel">
-            <div class="stats-top">
-                <div>
-                    <div id="ui-stats-heading" class="stats-title">Progression Globale de l'Arsenal</div>
-                </div>
-                <div class="stats-numbers">
-                    <div class="stat-pill">
-                        <span class="dot dot-mastered"></span>
-                        <span id="ui-lbl-mastered">Maîtrisés :</span>
-                        <strong id="count-mastered">0</strong>
+        <!-- STATUS FEEDBACK BANNER -->
+        <div id="status-banner" class="status-banner info" role="status" aria-live="polite">
+            <div class="status-left">
+                <span class="status-dot"></span>
+                <span id="status-banner-text">Prêt — Sauvegarde locale active.</span>
+            </div>
+            <span id="status-banner-meta" style="font-size: 0.75rem; color: var(--text-muted);">localStorage</span>
+        </div>
+
+        <!-- GLOBAL & PER-CATEGORY PROGRESS -->
+        <section class="panel">
+            <div class="global-header">
+                <span id="txt-global-title" class="section-kicker">Progression Globale &amp; Estimation XP Maîtrise</span>
+                <div class="global-metrics">
+                    <div class="metric-chip">
+                        <span class="chip-dot mastered"></span>
+                        <span id="txt-lbl-mastered">Maîtrisés :</span>
+                        <strong id="stat-mastered">0</strong>
                     </div>
-                    <div class="stat-pill">
-                        <span class="dot dot-owned"></span>
-                        <span id="ui-lbl-owned">Possédés :</span>
-                        <strong id="count-owned">0</strong>
+                    <div class="metric-chip">
+                        <span class="chip-dot owned"></span>
+                        <span id="txt-lbl-owned">Possédés :</span>
+                        <strong id="stat-owned">0</strong>
                     </div>
-                    <div class="stat-pill">
-                        <span class="dot dot-missing"></span>
-                        <span id="ui-lbl-missing">Manquants :</span>
-                        <strong id="count-missing">0</strong>
+                    <div class="metric-chip">
+                        <span class="chip-dot missing"></span>
+                        <span id="txt-lbl-missing">Manquants :</span>
+                        <strong id="stat-missing">0</strong>
                     </div>
-                    <div class="stat-pct" id="count-percent">0%</div>
+                    <div class="xp-highlight" id="stat-xp">0 XP</div>
+                    <div class="percent-highlight" id="stat-percent">0%</div>
                 </div>
             </div>
-            <div class="progress-track">
-                <div id="bar-mastered" class="progress-fill-mastered" style="width: 0%;"></div>
-                <div id="bar-owned" class="progress-fill-owned" style="width: 0%;"></div>
+
+            <div class="stacked-bar" aria-hidden="true">
+                <div id="bar-mastered" class="bar-seg-mastered" style="width: 0%;"></div>
+                <div id="bar-owned" class="bar-seg-owned" style="width: 0%;"></div>
             </div>
+
+            <div id="category-bars-grid" class="category-bars-grid"></div>
         </section>
 
-        <!-- FILTERS & CATEGORY TABS -->
-        <section class="filters-panel">
-            <div class="category-tabs" id="category-tabs"></div>
+        <!-- FILTERS & BULK ACTIONS -->
+        <section class="panel controls-stack">
+            <div id="category-tabs" class="tabs-row"></div>
 
-            <div class="filter-row">
+            <div class="quick-filters-bar">
+                <div id="quick-filters" class="quick-filter-group"></div>
+            </div>
+
+            <div class="search-and-bulk">
                 <input
                     type="text"
                     id="search-input"
-                    class="input-control"
-                    placeholder="Rechercher une Warframe, une arme, une relique, un boss..."
-                    oninput="renderItems()"
+                    class="search-box"
+                    placeholder="Rechercher (FR / EN) : nom, boss, relique, dojo, quête..."
+                    oninput="renderCatalog()"
                 >
 
-                <select id="status-filter" class="select-control" onchange="renderItems()">
-                    <option value="all">Statut : Tous</option>
-                    <option value="missing">Manquants uniquement</option>
-                    <option value="owned">Possédés (en cours)</option>
-                    <option value="mastered">Maîtrisés (Niv. Max)</option>
-                </select>
-
-                <select id="variant-filter" class="select-control" onchange="renderItems()">
-                    <option value="all">Variante : Toutes</option>
-                    <option value="prime">Prime uniquement</option>
-                    <option value="standard">Standard / Autres</option>
-                </select>
-
-                <button type="button" class="btn btn-orokin" onclick="confirmBulkMaster()">
+                <button type="button" class="btn btn-gold" onclick="requestBulkCategoryMaster()">
                     <span>★</span>
-                    <span id="ui-bulk-btn">Marquer la sélection comme Maîtrisée</span>
+                    <span id="txt-bulk-cat">Tout maîtriser (Catégorie)</span>
+                </button>
+
+                <button type="button" class="btn" onclick="requestBulkFilteredMaster()">
+                    <span>✓</span>
+                    <span id="txt-bulk-filtered">Maîtriser la vue</span>
                 </button>
             </div>
 
-            <div class="results-meta">
-                <span id="results-summary">0 objet affiché</span>
-                <span id="ui-autosave-hint">Sauvegarde automatique active dans ce navigateur</span>
+            <div class="filter-footer-meta">
+                <span id="results-count-label">0 élément</span>
+                <span id="txt-xp-note">Estimation : 6 000 XP (Warframe / Compagnon / Archwing) • 3 000 XP (Arme)</span>
             </div>
         </section>
 
-        <!-- ITEMS GRID -->
-        <section id="items-grid" class="items-grid"></section>
+        <!-- EQUIPMENT CARDS -->
+        <section id="catalog-grid" class="catalog-grid"></section>
 
-        <!-- EMPTY SEARCH MESSAGE -->
-        <div id="empty-state" class="empty-state" style="display: none;">
-            <h3 id="ui-empty-title">Aucun équipement ne correspond à ta recherche</h3>
-            <p id="ui-empty-desc">Essaie de modifier les filtres ou le mot-clé recherché.</p>
-            <button type="button" class="btn" onclick="resetFilters()" id="ui-empty-btn">Réinitialiser les filtres</button>
+        <!-- EMPTY STATE -->
+        <div id="empty-box" class="empty-box" style="display: none;">
+            <h3 id="txt-empty-title">Aucun équipement trouvé</h3>
+            <p id="txt-empty-desc">Essaie un autre mot-clé ou réinitialise les filtres actifs.</p>
+            <button type="button" class="btn btn-cyan" onclick="resetAllFilters()" id="txt-empty-reset">Réinitialiser les filtres</button>
         </div>
 
     </main>
 
+    <!-- CUSTOM ITEM MODAL -->
+    <div id="custom-modal" class="modal-overlay" onclick="handleModalOverlayClick(event, 'custom-modal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div id="custom-modal-title" class="modal-heading">Ajouter un équipement personnalisé</div>
+            <div id="custom-modal-desc" class="modal-copy">Ajoute une arme, Warframe ou compagnon supplémentaire à ton suivi.</div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="custom-name-fr" id="lbl-custom-fr">Nom (FR / Principal) *</label>
+                    <input type="text" id="custom-name-fr" class="search-box" placeholder="Ex : Wukong Prime">
+                </div>
+
+                <div class="form-field">
+                    <label for="custom-name-en" id="lbl-custom-en">Nom (EN — optionnel)</label>
+                    <input type="text" id="custom-name-en" class="search-box" placeholder="Ex : Wukong Prime">
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-field">
+                        <label for="custom-cat" id="lbl-custom-cat">Catégorie</label>
+                        <select id="custom-cat" class="search-box">
+                            <option value="warframes">Warframes</option>
+                            <option value="primary">Primary</option>
+                            <option value="secondary">Secondary</option>
+                            <option value="melee">Melee</option>
+                            <option value="companions">Companions</option>
+                            <option value="archwing">Archwings</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="custom-mr" id="lbl-custom-mr">Palier de Maîtrise (MR)</label>
+                        <input type="number" id="custom-mr" class="search-box" min="0" max="30" value="0">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="custom-source-fr" id="lbl-custom-src-fr">Source de farm / obtention (FR)</label>
+                    <input type="text" id="custom-source-fr" class="search-box" placeholder="Ex : Reliques du Néant ou Dojo">
+                </div>
+
+                <div class="form-field">
+                    <label for="custom-source-en" id="lbl-custom-src-en">Farm / Drop Source (EN — optionnel)</label>
+                    <input type="text" id="custom-source-en" class="search-box" placeholder="Ex : Void Relics or Clan Dojo">
+                </div>
+
+                <label class="checkbox-line">
+                    <input type="checkbox" id="custom-is-prime">
+                    <span id="lbl-custom-prime">Variante Prime</span>
+                </label>
+            </div>
+
+            <div class="modal-foot">
+                <button type="button" class="btn" onclick="closeModal('custom-modal')" id="btn-custom-cancel">Annuler</button>
+                <button type="button" class="btn btn-cyan" onclick="saveCustomItem()" id="btn-custom-save">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- CONFIRMATION MODAL -->
-    <div id="confirm-modal" class="modal-backdrop" onclick="closeModal(event)">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div id="modal-title" class="modal-title">Confirmation</div>
-            <div id="modal-body" class="modal-body"></div>
-            <div class="modal-actions">
-                <button type="button" class="btn" onclick="closeModal()" id="modal-cancel-btn">Annuler</button>
-                <button type="button" class="btn btn-orokin" id="modal-confirm-btn">Confirmer</button>
+    <div id="confirm-modal" class="modal-overlay" onclick="handleModalOverlayClick(event, 'confirm-modal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div id="confirm-modal-title" class="modal-heading">Confirmation</div>
+            <div id="confirm-modal-body" class="modal-copy"></div>
+            <div class="modal-foot">
+                <button type="button" class="btn" onclick="closeModal('confirm-modal')" id="btn-confirm-cancel">Annuler</button>
+                <button type="button" class="btn btn-gold" id="btn-confirm-ok">Confirmer</button>
             </div>
         </div>
     </div>
 
     <script>
         /* =====================================================================
-           1. RICH BUILT-IN BILINGUAL WARFRAME DATABASE (INSTANT & OFFLINE-SAFE)
+           1. CURATED WARFRAME EQUIPMENT CATALOG (BASE + PRIME + SOURCES)
            ===================================================================== */
-        const BUILTIN_ITEMS = [
-            // --- WARFRAMES (NORMAL & PRIME) ---
-            {
-                id: "wf_excalibur", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Excalibur", nameEn: "Excalibur",
-                sourceFr: "Warframe de départ ou Boss : Lieutenant Lech Kril (Mars - War).",
-                sourceEn: "Starter Warframe or Boss: Lieutenant Lech Kril (Mars - War).",
-                detailsFr: ["Schéma : Marché (25 000 Crédits)", "Neuroptiques, Châssis, Systèmes : Lieutenant Lech Kril (Mars - War)", "Aussi disponible auprès de Teshin (Conclave)"],
-                detailsEn: ["Blueprint: Market (25,000 Credits)", "Neuroptics, Chassis, Systems: Lieutenant Lech Kril (Mars - War)", "Also available from Teshin (Conclave)"]
-            },
-            {
-                id: "wf_excalibur_umbra", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Excalibur Umbra", nameEn: "Excalibur Umbra",
-                sourceFr: "Quête Principale : Le Sacrifice (livré déjà construit au niveau 30).",
-                sourceEn: "Main Quest: The Sacrifice (awarded pre-built at Rank 30).",
-                detailsFr: ["Terminer la quête Le Sacrifice (nécessite Apostasie Prologue)", "Livré avec un Emplacement de Warframe et un Réacteur Orokin installé"],
-                detailsEn: ["Complete The Sacrifice quest (requires Apostasy Prologue)", "Comes pre-installed with a Warframe Slot and Orokin Reactor"]
-            },
-            {
-                id: "wf_volt", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Volt", nameEn: "Volt",
-                sourceFr: "Warframe de départ ou Dojo de Clan (Laboratoire Tenno).",
-                sourceEn: "Starter Warframe or Clan Dojo (Tenno Lab).",
-                detailsFr: ["Schéma + Neuroptiques + Châssis + Systèmes : Laboratoire Tenno du Dojo de Clan"],
-                detailsEn: ["Blueprint + Neuroptics + Chassis + Systems: Tenno Lab in Clan Dojo"]
-            },
-            {
-                id: "wf_volt_prime", category: "warframes", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Volt Prime", nameEn: "Volt Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia) ou Reliques Baro Ki'Teer (Axi V8 / Neo O1).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia) or Baro Ki'Teer Relics (Axi V8 / Neo O1).",
-                detailsFr: ["Reliques exclusives apportées périodiquement par Baro Ki'Teer", "Disponible via Aya Raffiné lors de sa rotation Résurgence Prime"],
-                detailsEn: ["Exclusive relics periodically sold by Baro Ki'Teer", "Available via Regal Aya during Prime Resurgence rotation"]
-            },
-            {
-                id: "wf_mag", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Mag", nameEn: "Mag",
-                sourceFr: "Warframe de départ ou Boss : Le Sergent (Phobos - Iliad).",
-                sourceEn: "Starter Warframe or Boss: The Sergeant (Phobos - Iliad).",
-                detailsFr: ["Schéma : Marché (25 000 Crédits)", "Composants : Éliminer Le Sergent sur Phobos (Iliad)"],
-                detailsEn: ["Blueprint: Market (25,000 Credits)", "Components: Defeat The Sergeant on Phobos (Iliad)"]
-            },
-            {
-                id: "wf_rhino", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Rhino", nameEn: "Rhino",
-                sourceFr: "Boss : Le Jackal (Vénus - Fossa). Idéal pour débuter.",
-                sourceEn: "Boss: The Jackal (Venus - Fossa). Ideal early-game Warframe.",
-                detailsFr: ["Schéma : Marché (35 000 Crédits)", "Neuroptiques, Châssis, Systèmes : Le Jackal (Vénus - Fossa)"],
-                detailsEn: ["Blueprint: Market (35,000 Credits)", "Neuroptics, Chassis, Systems: The Jackal (Venus - Fossa)"]
-            },
-            {
-                id: "wf_rhino_prime", category: "warframes", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Rhino Prime", nameEn: "Rhino Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia - Bazar de Maroo).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia - Maroo's Bazaar).",
-                detailsFr: ["Reliques Lith B4, Meso N6, Neo R1, Axi S3 lors des rotations Résurgence Prime"],
-                detailsEn: ["Lith B4, Meso N6, Neo R1, Axi S3 Relics during Prime Resurgence rotations"]
-            },
-            {
-                id: "wf_wisp", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Wisp", nameEn: "Wisp",
-                sourceFr: "Boss : Le Ropalolyste (Jupiter - Le Ropalolyste, après la quête La Chimère).",
-                sourceEn: "Boss: The Ropalolyst (Jupiter - The Ropalolyst, after Chimera Prologue).",
-                detailsFr: ["Schéma principal et composants drop directement sur le Ropalolyste (Jupiter)"],
-                detailsEn: ["Main Blueprint and all parts drop directly from The Ropalolyst (Jupiter)"]
-            },
-            {
-                id: "wf_wisp_prime", category: "warframes", mr: 0, isPrime: true,
-                nameFr: "Wisp Prime", nameEn: "Wisp Prime",
-                sourceFr: "Reliques du Néant (Lith W3, Meso W3, Neo W1, Axi W3).",
-                sourceEn: "Void Relics (Lith W3, Meso W3, Neo W1, Axi W3).",
-                detailsFr: ["Schéma : Axi W3 (Rare)", "Neuroptiques : Neo W1 (Rare)", "Châssis : Meso W3 (Inhabituel)", "Systèmes : Lith W3 (Commun)"],
-                detailsEn: ["Blueprint: Axi W3 (Rare)", "Neuroptics: Neo W1 (Rare)", "Chassis: Meso W3 (Uncommon)", "Systems: Lith W3 (Common)"]
-            },
-            {
-                id: "wf_gauss", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Gauss", nameEn: "Gauss",
-                sourceFr: "Perturbation sur Sedna (Kelpie) — Rotation C.",
-                sourceEn: "Disruption on Sedna (Kelpie) — Rotation C.",
-                detailsFr: ["Schéma : Marché (30 000 Crédits)", "Neuroptiques, Châssis, Systèmes : Sedna - Kelpie (Perturbation, Rotation C)"],
-                detailsEn: ["Blueprint: Market (30,000 Credits)", "Neuroptics, Chassis, Systems: Sedna - Kelpie (Disruption, Rotation C)"]
-            },
-            {
-                id: "wf_gauss_prime", category: "warframes", mr: 0, isPrime: true,
-                nameFr: "Gauss Prime", nameEn: "Gauss Prime",
-                sourceFr: "Reliques du Néant (Lith G9, Meso G7, Neo G6, Axi G12).",
-                sourceEn: "Void Relics (Lith G9, Meso G7, Neo G6, Axi G12).",
-                detailsFr: ["Schéma : Meso G7 (Commun)", "Neuroptiques : Neo G6 (Inhabituel)", "Châssis : Lith G9 (Commun)", "Systèmes : Axi G12 (Rare)"],
-                detailsEn: ["Blueprint: Meso G7 (Common)", "Neuroptics: Neo G6 (Uncommon)", "Chassis: Lith G9 (Common)", "Systems: Axi G12 (Rare)"]
-            },
-            {
-                id: "wf_mesa", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Mesa", nameEn: "Mesa",
-                sourceFr: "Quête Patient Zéro puis Boss : Alad V Mutaliste (Éris).",
-                sourceEn: "Patient Zero Quest then Boss: Mutalist Alad V (Eris).",
-                detailsFr: ["Schéma : Marché", "Composants : Boss Alad V Mutaliste (nécessite des Coordonnées Nav Mutalistes)"],
-                detailsEn: ["Blueprint: Market", "Parts: Mutalist Alad V Assassinate (requires Mutalist Alad V Nav Coordinates)"]
-            },
-            {
-                id: "wf_mesa_prime", category: "warframes", mr: 2, isPrime: true, vaulted: true,
-                nameFr: "Mesa Prime", nameEn: "Mesa Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia).",
-                detailsFr: ["Reliques Lith M4, Meso M3, Neo M2, Axi M1 via Résurgence Prime"],
-                detailsEn: ["Lith M4, Meso M3, Neo M2, Axi M1 Relics via Prime Resurgence"]
-            },
-            {
-                id: "wf_nekros", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Nekros", nameEn: "Nekros",
-                sourceFr: "Boss : Lephantis (Deimos - Magnacidium).",
-                sourceEn: "Boss: Lephantis (Deimos - Magnacidium).",
-                detailsFr: ["Schéma : Marché (100 000 Crédits)", "Composants : Assassinat Lephantis sur Deimos"],
-                detailsEn: ["Blueprint: Market (100,000 Credits)", "Parts: Lephantis Assassination on Deimos"]
-            },
-            {
-                id: "wf_saryn", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Saryn", nameEn: "Saryn",
-                sourceFr: "Boss : Kela De Thaym (Sedna - Merrow).",
-                sourceEn: "Boss: Kela De Thaym (Sedna - Merrow).",
-                detailsFr: ["Schéma : Marché", "Composants : Kela De Thaym sur Sedna (nécessite 25 Points de Jugement Rathuum)"],
-                detailsEn: ["Blueprint: Market", "Parts: Kela De Thaym on Sedna (requires 25 Rathuum Judgement Points)"]
-            },
-            {
-                id: "wf_saryn_prime", category: "warframes", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Saryn Prime", nameEn: "Saryn Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia).",
-                detailsFr: ["Reliques Meso S2, Neo S1, Axi S1, Lith S4 via Résurgence Prime"],
-                detailsEn: ["Meso S2, Neo S1, Axi S1, Lith S4 Relics via Prime Resurgence"]
-            },
-            {
-                id: "wf_protea", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Protea", nameEn: "Protea",
-                sourceFr: "Quête Le Protocole Deadlock + Néant de Granum (Couronnes Granum).",
-                sourceEn: "The Deadlock Protocol Quest + Granum Void (Granum Crowns).",
-                detailsFr: ["Schéma : Récompense de quête Le Protocole Deadlock", "Neuroptiques : Néant de Granum (Couronne normale)", "Châssis : Néant de Granum Étendu (Couronne Exemplaire)", "Systèmes : Néant de Granum Cauchemar (Couronne Zénith)"],
-                detailsEn: ["Blueprint: The Deadlock Protocol quest reward", "Neuroptics: Granum Void (Granum Crown)", "Chassis: Extended Granum Void (Exemplar Crown)", "Systems: Nightmare Granum Void (Zenith Crown)"]
-            },
-            {
-                id: "wf_protea_prime", category: "warframes", mr: 0, isPrime: true,
-                nameFr: "Protea Prime", nameEn: "Protea Prime",
-                sourceFr: "Reliques du Néant (Lith P9, Meso P14, Neo P6, Axi P7).",
-                sourceEn: "Void Relics (Lith P9, Meso P14, Neo P6, Axi P7).",
-                detailsFr: ["Schéma : Neo P6 (Rare)", "Neuroptiques : Lith P9 (Inhabituel)", "Châssis : Axi P7 (Rare)", "Systèmes : Meso P14 (Commun)"],
-                detailsEn: ["Blueprint: Neo P6 (Rare)", "Neuroptics: Lith P9 (Uncommon)", "Chassis: Axi P7 (Rare)", "Systems: Meso P14 (Common)"]
-            },
-            {
-                id: "wf_kullervo", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Kullervo", nameEn: "Kullervo",
-                sourceFr: "Duviri : Acrithis (contre des Fléaux de Kullervo obtenus dans la Prison de Kullervo).",
-                sourceEn: "Duviri: Acrithis (traded for Kullervo's Bane from Kullervo's Hold).",
-                detailsFr: ["Disponible durant les spirales Chagrin, Peur et Colère à Duviri", "Échanger les Fléaux de Kullervo auprès d'Acrithis"],
-                detailsEn: ["Available during Sorrow, Fear, and Anger spirals in Duviri", "Trade Kullervo's Bane with Acrithis"]
-            },
-            {
-                id: "wf_dante", category: "warframes", mr: 0, isPrime: false,
-                nameFr: "Dante", nameEn: "Dante",
-                sourceFr: "Laboratoires d'Albrecht (Deimos - Armatus, Perturbation) ou Loid.",
-                sourceEn: "Albrecht's Laboratories (Deimos - Armatus, Disruption) or Loid.",
-                detailsFr: ["Drop sur la mission Perturbation Armatus (Deimos) en Rotation C", "Achat garanti contre des Capillaires de Vaisseaux auprès de Loid (Sanctum Anatomica)"],
-                detailsEn: ["Drops from Armatus Disruption (Deimos) Rotation C", "Guaranteed purchase for Vessel Capillaries from Loid (Sanctum Anatomica)"]
-            },
-            {
-                id: "wf_sevagoth_prime", category: "warframes", mr: 0, isPrime: true,
-                nameFr: "Sevagoth Prime", nameEn: "Sevagoth Prime",
-                sourceFr: "Reliques du Néant (Lith S16, Meso S14, Neo S18, Axi S17).",
-                sourceEn: "Void Relics (Lith S16, Meso S14, Neo S18, Axi S17).",
-                detailsFr: ["Schéma : Meso S14 (Rare)", "Neuroptiques : Lith S16 (Inhabituel)", "Châssis : Axi S17 (Rare)", "Systèmes : Neo S18 (Commun)"],
-                detailsEn: ["Blueprint: Meso S14 (Rare)", "Neuroptics: Lith S16 (Uncommon)", "Chassis: Axi S17 (Rare)", "Systems: Neo S18 (Common)"]
-            },
+        const BASE_CATALOG = [
+            // WARFRAMES
+            { id: "wf_excalibur", cat: "warframes", mr: 0, prime: false, nameFr: "Excalibur", nameEn: "Excalibur", srcFr: "Départ ou Boss : Lieutenant Lech Kril (Mars - War)", srcEn: "Starter or Boss: Lieutenant Lech Kril (Mars - War)" },
+            { id: "wf_volt", cat: "warframes", mr: 0, prime: false, nameFr: "Volt", nameEn: "Volt", srcFr: "Départ ou Dojo de Clan (Laboratoire Tenno)", srcEn: "Starter or Clan Dojo (Tenno Lab)" },
+            { id: "wf_mag", cat: "warframes", mr: 0, prime: false, nameFr: "Mag", nameEn: "Mag", srcFr: "Départ ou Boss : Le Sergent (Phobos - Iliad)", srcEn: "Starter or Boss: The Sergeant (Phobos - Iliad)" },
+            { id: "wf_rhino", cat: "warframes", mr: 0, prime: false, nameFr: "Rhino", nameEn: "Rhino", srcFr: "Boss : Le Jackal (Vénus - Fossa)", srcEn: "Boss: The Jackal (Venus - Fossa)" },
+            { id: "wf_rhino_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Rhino Prime", nameEn: "Rhino Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+            { id: "wf_wukong", cat: "warframes", mr: 0, prime: false, nameFr: "Wukong", nameEn: "Wukong", srcFr: "Dojo de Clan (Laboratoire Tenno)", srcEn: "Clan Dojo (Tenno Lab)" },
+            { id: "wf_wukong_prime", cat: "warframes", mr: 5, prime: true, nameFr: "Wukong Prime", nameEn: "Wukong Prime", srcFr: "Résurgence Prime (Varzia) / Reliques du Néant", srcEn: "Prime Resurgence (Varzia) / Void Relics" },
+            { id: "wf_wisp", cat: "warframes", mr: 0, prime: false, nameFr: "Wisp", nameEn: "Wisp", srcFr: "Boss : Le Ropalolyste (Jupiter)", srcEn: "Boss: The Ropalolyst (Jupiter)" },
+            { id: "wf_wisp_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Wisp Prime", nameEn: "Wisp Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "wf_gauss", cat: "warframes", mr: 0, prime: false, nameFr: "Gauss", nameEn: "Gauss", srcFr: "Perturbation : Kelpie (Sedna - Rotation C)", srcEn: "Disruption: Kelpie (Sedna - Rotation C)" },
+            { id: "wf_gauss_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Gauss Prime", nameEn: "Gauss Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "wf_protea", cat: "warframes", mr: 0, prime: false, nameFr: "Protea", nameEn: "Protea", srcFr: "Quête Protocole Deadlock + Néant de Granum", srcEn: "Deadlock Protocol Quest + Granum Void" },
+            { id: "wf_protea_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Protea Prime", nameEn: "Protea Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "wf_mesa", cat: "warframes", mr: 0, prime: false, nameFr: "Mesa", nameEn: "Mesa", srcFr: "Quête Patient Zéro / Boss Alad V Mutaliste", srcEn: "Patient Zero Quest / Mutalist Alad V" },
+            { id: "wf_mesa_prime", cat: "warframes", mr: 2, prime: true, nameFr: "Mesa Prime", nameEn: "Mesa Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+            { id: "wf_saryn", cat: "warframes", mr: 0, prime: false, nameFr: "Saryn", nameEn: "Saryn", srcFr: "Boss : Kela De Thaym (Sedna - Merrow)", srcEn: "Boss: Kela De Thaym (Sedna - Merrow)" },
+            { id: "wf_saryn_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Saryn Prime", nameEn: "Saryn Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+            { id: "wf_kullervo", cat: "warframes", mr: 0, prime: false, nameFr: "Kullervo", nameEn: "Kullervo", srcFr: "Duviri : Acrithis (Fléaux de Kullervo)", srcEn: "Duviri: Acrithis (Kullervo's Bane)" },
+            { id: "wf_dante", cat: "warframes", mr: 0, prime: false, nameFr: "Dante", nameEn: "Dante", srcFr: "Deimos : Armatus (Perturbation) ou Loid", srcEn: "Deimos: Armatus (Disruption) or Loid" },
+            { id: "wf_sevagoth_prime", cat: "warframes", mr: 0, prime: true, nameFr: "Sevagoth Prime", nameEn: "Sevagoth Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
 
-            // --- ARMES PRINCIPALES (PRIMARY) ---
-            {
-                id: "pri_ignis_wraith", category: "primary", mr: 9, isPrime: false,
-                nameFr: "Ignis Wraith", nameEn: "Ignis Wraith",
-                sourceFr: "Dojo de Clan (Laboratoire Chimique, Rang 10) ou Baro Ki'Teer.",
-                sourceEn: "Clan Dojo (Chem Lab Research, Rank 10) or Baro Ki'Teer.",
-                detailsFr: ["Copier le schéma au Laboratoire Chimique d'un Clan Rang 10+ (15 000 Crédits)"],
-                detailsEn: ["Replicate Blueprint in a Rank 10+ Clan's Chem Lab (15,000 Credits)"]
-            },
-            {
-                id: "pri_acceltra_prime", category: "primary", mr: 14, isPrime: true,
-                nameFr: "Acceltra Prime", nameEn: "Acceltra Prime",
-                sourceFr: "Reliques du Néant (Lith A6, Meso A5, Neo A11, Axi A18).",
-                sourceEn: "Void Relics (Lith A6, Meso A5, Neo A11, Axi A18).",
-                detailsFr: ["Schéma : Meso A5 (Commun)", "Canon : Axi A18 (Rare)", "Culasse : Neo A11 (Rare)", "Crosse : Lith A6 (Inhabituel)"],
-                detailsEn: ["Blueprint: Meso A5 (Common)", "Barrel: Axi A18 (Rare)", "Receiver: Neo A11 (Rare)", "Stock: Lith A6 (Uncommon)"]
-            },
-            {
-                id: "pri_fulmin_prime", category: "primary", mr: 12, isPrime: true,
-                nameFr: "Fulmin Prime", nameEn: "Fulmin Prime",
-                sourceFr: "Reliques du Néant (Lith F2, Meso F4, Neo F2, Axi F1).",
-                sourceEn: "Void Relics (Lith F2, Meso F4, Neo F2, Axi F1).",
-                detailsFr: ["Schéma : Lith F2 (Commun)", "Canon : Neo F2 (Inhabituel)", "Culasse : Axi F1 (Rare)", "Crosse : Meso F4 (Inhabituel)"],
-                detailsEn: ["Blueprint: Lith F2 (Common)", "Barrel: Neo F2 (Uncommon)", "Receiver: Axi F1 (Rare)", "Stock: Meso F4 (Uncommon)"]
-            },
-            {
-                id: "pri_nataruk", category: "primary", mr: 0, isPrime: false,
-                nameFr: "Nataruk", nameEn: "Nataruk",
-                sourceFr: "Quête Principale : La Nouvelle Guerre (livré déjà construit avec Catalyseur).",
-                sourceEn: "Main Quest: The New War (awarded pre-built with Orokin Catalyst).",
-                detailsFr: ["Obtenu automatiquement pendant la quête La Nouvelle Guerre", "Reproductible auprès de Céphalon Simaris si vendu par erreur"],
-                detailsEn: ["Obtained automatically during The New War quest", "Re-obtainable from Cephalon Simaris if accidentally sold"]
-            },
-            {
-                id: "pri_torid", category: "primary", mr: 4, isPrime: false,
-                nameFr: "Torid (Incarnon)", nameEn: "Torid (Incarnon)",
-                sourceFr: "Dojo de Clan (Laboratoire Bio) + Adaptateur Incarnon (Circuit Route de l'Acier).",
-                sourceEn: "Clan Dojo (Bio Lab) + Incarnon Genesis (Steel Path Circuit).",
-                detailsFr: ["Arme de base : Laboratoire Bio du Dojo de Clan", "Adaptateur Incarnon : Circuit de Duviri (Route de l'Acier, Semaine 4)"],
-                detailsEn: ["Base weapon: Bio Lab in Clan Dojo", "Incarnon Adapter: Steel Path Duviri Circuit (Week 4 rotation)"]
-            },
-            {
-                id: "pri_kuva_bramma", category: "primary", mr: 15, isPrime: false,
-                nameFr: "Bramma Kuva", nameEn: "Kuva Bramma",
-                sourceFr: "Vaincre une Liche Kuva équipée du Bramma Kuva (Cassini, Saturne).",
-                sourceEn: "Vanquish a Kuva Lich wielding the Kuva Bramma (Cassini, Saturn).",
-                detailsFr: ["Lancer Cassini (Saturne), abattre le Larvling Kuva et vérifier l'icône d'arme avant d'exécuter", "Éliminer la Liche dans la Proxima de Saturne (Railjack)"],
-                detailsEn: ["Run Cassini (Saturn), down the Kuva Larvling and check weapon preview before mercy", "Vanquish the Lich in Saturn Proxima (Railjack)"]
-            },
-            {
-                id: "pri_tenet_arcaplasmor", category: "primary", mr: 16, isPrime: false,
-                nameFr: "Arca Plasmor Tenet", nameEn: "Tenet Arca Plasmor",
-                sourceFr: "Vaincre une Sœur de Parvos (Hydra, Pluton - Néant de Granum).",
-                sourceEn: "Vanquish a Sister of Parvos (Hydra, Pluto - Granum Void).",
-                detailsFr: ["Utiliser une Couronne Granum Zénith sur Hydra (Pluton) et atteindre le Rang 1", "Vaincre la Sœur dans la Proxima de Neptune"],
-                detailsEn: ["Use a Zenith Granum Crown on Hydra (Pluto) and reach Rank 1", "Vanquish the Sister in Neptune Proxima"]
-            },
-            {
-                id: "pri_phenmor", category: "primary", mr: 14, isPrime: false,
-                nameFr: "Phenmor", nameEn: "Phenmor",
-                sourceFr: "Cavalero (Chrysalithe - Zariman Ten Zero, Rang 2 Les Holdfasts).",
-                sourceEn: "Cavalero (Chrysalith - Zariman Ten Zero, Rank 2 The Holdfasts).",
-                detailsFr: ["Acheter le schéma auprès de Cavalero contre de la réputation Holdfasts"],
-                detailsEn: ["Purchase Blueprint from Cavalero for Holdfasts standing"]
-            },
-            {
-                id: "pri_burston_prime", category: "primary", mr: 12, isPrime: true,
-                nameFr: "Burston Prime (Incarnon)", nameEn: "Burston Prime (Incarnon)",
-                sourceFr: "Reliques du Néant permanentes (Evergreen) + Adaptateur Incarnon (Duviri).",
-                sourceEn: "Evergreen Void Relics + Incarnon Genesis Adapter (Duviri).",
-                detailsFr: ["Reliques toujours disponibles en mission", "Adaptateur Incarnon : Circuit Route de l'Acier (Semaine 7)"],
-                detailsEn: ["Permanently unvaulted Void Relics", "Incarnon Adapter: Steel Path Circuit (Week 7 rotation)"]
-            },
+            // PRIMARY
+            { id: "pri_ignis_wraith", cat: "primary", mr: 9, prime: false, nameFr: "Ignis Wraith", nameEn: "Ignis Wraith", srcFr: "Dojo de Clan (Labo Chimique, Rang 10+)", srcEn: "Clan Dojo (Chem Lab, Rank 10+)" },
+            { id: "pri_nataruk", cat: "primary", mr: 0, prime: false, nameFr: "Nataruk", nameEn: "Nataruk", srcFr: "Quête Principale : La Nouvelle Guerre", srcEn: "Main Quest: The New War" },
+            { id: "pri_phenmor", cat: "primary", mr: 14, prime: false, nameFr: "Phenmor", nameEn: "Phenmor", srcFr: "Syndicat Les Holdfasts (Cavalero - Zariman)", srcEn: "The Holdfasts Syndicate (Cavalero - Zariman)" },
+            { id: "pri_kuva_bramma", cat: "primary", mr: 15, prime: false, nameFr: "Bramma Kuva", nameEn: "Kuva Bramma", srcFr: "Liche Kuva (Larvling sur Cassini, Saturne)", srcEn: "Kuva Lich (Larvling on Cassini, Saturn)" },
+            { id: "pri_tenet_plasmor", cat: "primary", mr: 16, prime: false, nameFr: "Arca Plasmor Tenet", nameEn: "Tenet Arca Plasmor", srcFr: "Sœur de Parvos (Hydra, Pluton - Couronne Zénith)", srcEn: "Sister of Parvos (Hydra, Pluto - Zenith Crown)" },
+            { id: "pri_acceltra_prime", cat: "primary", mr: 14, prime: true, nameFr: "Acceltra Prime", nameEn: "Acceltra Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "pri_fulmin_prime", cat: "primary", mr: 12, prime: true, nameFr: "Fulmin Prime", nameEn: "Fulmin Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "pri_burston_prime", cat: "primary", mr: 12, prime: true, nameFr: "Burston Prime", nameEn: "Burston Prime", srcFr: "Reliques du Néant (Éligible Incarnon Duviri)", srcEn: "Void Relics (Duviri Incarnon Eligible)" },
 
-            // --- ARMES SECONDAIRES (SECONDARY) ---
-            {
-                id: "sec_kuva_nukor", category: "secondary", mr: 13, isPrime: false,
-                nameFr: "Nukor Kuva", nameEn: "Kuva Nukor",
-                sourceFr: "Vaincre une Liche Kuva équipée du Nukor Kuva (Cassini, Saturne).",
-                sourceEn: "Vanquish a Kuva Lich wielding the Kuva Nukor (Cassini, Saturn).",
-                detailsFr: ["Générer une Liche avec élément Magnétique ou Feu sur Cassini (Saturne)"],
-                detailsEn: ["Spawn a Kuva Lich with Magnetic or Heat progenitor on Cassini (Saturn)"]
-            },
-            {
-                id: "sec_laetum", category: "secondary", mr: 14, isPrime: false,
-                nameFr: "Laetum", nameEn: "Laetum",
-                sourceFr: "Cavalero (Chrysalithe - Zariman Ten Zero, Rang 1 Les Holdfasts).",
-                sourceEn: "Cavalero (Chrysalith - Zariman Ten Zero, Rank 1 The Holdfasts).",
-                detailsFr: ["L'une des meilleures armes secondaires du jeu, accessible dès le Rang 1 Holdfasts"],
-                detailsEn: ["One of the strongest secondary weapons in the game, unlocked at Holdfasts Rank 1"]
-            },
-            {
-                id: "sec_epitaph_prime", category: "secondary", mr: 14, isPrime: true,
-                nameFr: "Epitaph Prime", nameEn: "Epitaph Prime",
-                sourceFr: "Reliques du Néant (Lith E1, Meso E6, Neo E4, Axi E2).",
-                sourceEn: "Void Relics (Lith E1, Meso E6, Neo E4, Axi E2).",
-                detailsFr: ["Schéma : Neo E4 (Commun)", "Canon : Lith E1 (Rare)", "Culasse : Axi E2 (Rare)"],
-                detailsEn: ["Blueprint: Neo E4 (Common)", "Barrel: Lith E1 (Rare)", "Receiver: Axi E2 (Rare)"]
-            },
-            {
-                id: "sec_lex_prime", category: "secondary", mr: 8, isPrime: true,
-                nameFr: "Lex Prime (Incarnon)", nameEn: "Lex Prime (Incarnon)",
-                sourceFr: "Reliques permanentes (Evergreen) + Adaptateur Incarnon (Duviri).",
-                sourceEn: "Evergreen Void Relics + Incarnon Genesis Adapter (Duviri).",
-                detailsFr: ["Schéma, Canon, Culasse dans les reliques permanentes", "Adaptateur Incarnon : Circuit Route de l'Acier (Semaine 5)"],
-                detailsEn: ["Blueprint, Barrel, Receiver in permanently unvaulted relics", "Incarnon Adapter: Steel Path Circuit (Week 5 rotation)"]
-            },
-            {
-                id: "sec_akarius_prime", category: "secondary", mr: 14, isPrime: true,
-                nameFr: "Akarius Prime", nameEn: "Akarius Prime",
-                sourceFr: "Reliques du Néant (Lith A7, Meso A6, Neo A12, Axi A19).",
-                sourceEn: "Void Relics (Lith A7, Meso A6, Neo A12, Axi A19).",
-                detailsFr: ["Schéma : Meso A6 (Rare)", "Canon (x2) : Axi A19 (Inhabituel)", "Culasse (x2) : Lith A7 (Rare)", "Lien : Neo A12 (Commun)"],
-                detailsEn: ["Blueprint: Meso A6 (Rare)", "Barrel (x2): Axi A19 (Uncommon)", "Receiver (x2): Lith A7 (Rare)", "Link: Neo A12 (Common)"]
-            },
-            {
-                id: "sec_grimoire", category: "secondary", mr: 0, isPrime: false,
-                nameFr: "Grimoire", nameEn: "Grimoire",
-                sourceFr: "Quête Principale : Murmures dans les Murs (livré déjà construit).",
-                sourceEn: "Main Quest: Whispers in the Walls (awarded pre-built).",
-                detailsFr: ["Obtenu gratuitement à la fin de la quête Murmures dans les Murs"],
-                detailsEn: ["Awarded upon completing Whispers in the Walls quest"]
-            },
+            // SECONDARY
+            { id: "sec_laetum", cat: "secondary", mr: 14, prime: false, nameFr: "Laetum", nameEn: "Laetum", srcFr: "Syndicat Les Holdfasts (Cavalero - Zariman)", srcEn: "The Holdfasts Syndicate (Cavalero - Zariman)" },
+            { id: "sec_kuva_nukor", cat: "secondary", mr: 13, prime: false, nameFr: "Nukor Kuva", nameEn: "Kuva Nukor", srcFr: "Liche Kuva (Larvling sur Cassini, Saturne)", srcEn: "Kuva Lich (Larvling on Cassini, Saturn)" },
+            { id: "sec_grimoire", cat: "secondary", mr: 0, prime: false, nameFr: "Grimoire", nameEn: "Grimoire", srcFr: "Quête Principale : Murmures dans les Murs", srcEn: "Main Quest: Whispers in the Walls" },
+            { id: "sec_atomos", cat: "secondary", mr: 5, prime: false, nameFr: "Atomos", nameEn: "Atomos", srcFr: "Marché (Schéma en Crédits)", srcEn: "Market (Credits Blueprint)" },
+            { id: "sec_epitaph_prime", cat: "secondary", mr: 14, prime: true, nameFr: "Epitaph Prime", nameEn: "Epitaph Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "sec_akarius_prime", cat: "secondary", mr: 14, prime: true, nameFr: "Akarius Prime", nameEn: "Akarius Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "sec_lex_prime", cat: "secondary", mr: 8, prime: true, nameFr: "Lex Prime", nameEn: "Lex Prime", srcFr: "Reliques du Néant (Éligible Incarnon Duviri)", srcEn: "Void Relics (Duviri Incarnon Eligible)" },
 
-            // --- ARMES DE MÊLÉE (MELEE) ---
-            {
-                id: "mel_glaive_prime", category: "melee", mr: 10, isPrime: true, vaulted: true,
-                nameFr: "Glaive Prime", nameEn: "Glaive Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia - Bazar de Maroo).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia - Maroo's Bazaar).",
-                detailsFr: ["Reliques Lith G1, Meso G2, Neo G3, Axi G5 lors des rotations Résurgence Prime"],
-                detailsEn: ["Lith G1, Meso G2, Neo G3, Axi G5 Relics during Prime Resurgence rotations"]
-            },
-            {
-                id: "mel_nikana_prime", category: "melee", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Nikana Prime", nameEn: "Nikana Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia).",
-                detailsFr: ["Reliques Lith N1, Meso N2, Axi N2 via Résurgence Prime"],
-                detailsEn: ["Lith N1, Meso N2, Axi N2 Relics via Prime Resurgence"]
-            },
-            {
-                id: "mel_praedos", category: "melee", mr: 14, isPrime: false,
-                nameFr: "Praedos", nameEn: "Praedos",
-                sourceFr: "Cavalero (Chrysalithe - Zariman Ten Zero, Rang 4 Les Holdfasts).",
-                sourceEn: "Cavalero (Chrysalith - Zariman Ten Zero, Rank 4 The Holdfasts).",
-                detailsFr: ["Tonfas Incarnon offrant un bonus permanent de vitesse de parkour et de sprint"],
-                detailsEn: ["Incarnon Tonfas granting permanent parkour velocity and sprint speed evolutions"]
-            },
-            {
-                id: "mel_xoris", category: "melee", mr: 4, isPrime: false,
-                nameFr: "Xoris", nameEn: "Xoris",
-                sourceFr: "Quête : Le Protocole Deadlock (indispensable pour le Néant de Granum).",
-                sourceEn: "Quest: The Deadlock Protocol (essential for Granum Void).",
-                detailsFr: ["Obtenu pendant la quête Le Protocole Deadlock", "Reproductible auprès de Céphalon Simaris"],
-                detailsEn: ["Obtained during The Deadlock Protocol quest", "Re-obtainable from Cephalon Simaris"]
-            },
-            {
-                id: "mel_orthos_prime", category: "melee", mr: 12, isPrime: true,
-                nameFr: "Orthos Prime", nameEn: "Orthos Prime",
-                sourceFr: "Reliques du Néant permanentes (Evergreen).",
-                sourceEn: "Permanently unvaulted Void Relics (Evergreen).",
-                detailsFr: ["Schéma, Lame (x2), Manche : toujours disponibles dans les reliques standards"],
-                detailsEn: ["Blueprint, Blade (x2), Handle: permanently available in standard relics"]
-            },
-            {
-                id: "mel_hate", category: "melee", mr: 8, isPrime: false,
-                nameFr: "Hate (Incarnon)", nameEn: "Hate (Incarnon)",
-                sourceFr: "Drop sur le Stalker / Stalker de l'Ombre + Adaptateur Incarnon (Duviri).",
-                sourceEn: "Drops from Stalker / Shadow Stalker + Incarnon Genesis (Duviri).",
-                detailsFr: ["Schéma : Vaincre le Stalker", "Adaptateur Incarnon : Circuit Route de l'Acier (Semaine 2)"],
-                detailsEn: ["Blueprint: Defeat the Stalker", "Incarnon Adapter: Steel Path Circuit (Week 2 rotation)"]
-            },
+            // MELEE
+            { id: "mel_xoris", cat: "melee", mr: 4, prime: false, nameFr: "Xoris", nameEn: "Xoris", srcFr: "Quête : Le Protocole Deadlock", srcEn: "Quest: The Deadlock Protocol" },
+            { id: "mel_praedos", cat: "melee", mr: 14, prime: false, nameFr: "Praedos", nameEn: "Praedos", srcFr: "Syndicat Les Holdfasts (Cavalero - Zariman)", srcEn: "The Holdfasts Syndicate (Cavalero - Zariman)" },
+            { id: "mel_broken_war", cat: "melee", mr: 10, prime: false, nameFr: "Guerre Brisée", nameEn: "Broken War", srcFr: "Quête Principale : Le Second Rêve", srcEn: "Main Quest: The Second Dream" },
+            { id: "mel_glaive_prime", cat: "melee", mr: 10, prime: true, nameFr: "Glaive Prime", nameEn: "Glaive Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+            { id: "mel_nikana_prime", cat: "melee", mr: 0, prime: true, nameFr: "Nikana Prime", nameEn: "Nikana Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+            { id: "mel_orthos_prime", cat: "melee", mr: 12, prime: true, nameFr: "Orthos Prime", nameEn: "Orthos Prime", srcFr: "Reliques du Néant", srcEn: "Void Relics" },
 
-            // --- COMPAGNONS & ARCHWINGS ---
-            {
-                id: "comp_nautilus_prime", category: "companions", mr: 0, isPrime: true,
-                nameFr: "Nautilus Prime", nameEn: "Nautilus Prime",
-                sourceFr: "Reliques du Néant (Lith N16, Meso N17, Neo N23, Axi N12).",
-                sourceEn: "Void Relics (Lith N16, Meso N17, Neo N23, Axi N12).",
-                detailsFr: ["Livré avec l'arme de sentinelle Verglas Prime", "Schéma : Neo N23 (Rare), Cérébrum : Axi N12 (Rare)"],
-                detailsEn: ["Comes with Verglas Prime sentinel weapon", "Blueprint: Neo N23 (Rare), Cerebrum: Axi N12 (Rare)"]
-            },
-            {
-                id: "comp_carrier_prime", category: "companions", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Carrier Prime", nameEn: "Carrier Prime",
-                sourceFr: "Prime Vault / Résurgence Prime (Varzia).",
-                sourceEn: "Prime Vault / Prime Resurgence (Varzia).",
-                detailsFr: ["Sentinelle idéale pour convertir les munitions et ouvrir automatiquement les caisses"],
-                detailsEn: ["Ideal sentinel for ammo mutation and automated crate breaking"]
-            },
-            {
-                id: "comp_panzer_vulpaphyla", category: "companions", mr: 0, isPrime: false,
-                nameFr: "Vulpaphyla Panzer", nameEn: "Panzer Vulpaphyla",
-                sourceFr: "Fils (Necralisk - Deimos) : Capturer un Vulpaphyla Panzer affaibli en Pugilat.",
-                sourceEn: "Son (Necralisk - Deimos): Capture a weakened Panzer Vulpaphyla via Conservation.",
-                detailsFr: ["Capturer un Vulpaphyla Panzer blessé par les Infestés dans le Puy de Cambion", "Revivification auprès du Fils avec un Mutagène et un Antigène"],
-                detailsEn: ["Capture an Infested-weakened Panzer Vulpaphyla in Cambion Drift", "Revivify at Son using a Mutagen and an Antigen"]
-            },
-            {
-                id: "comp_smeeta_kavat", category: "companions", mr: 0, isPrime: false,
-                nameFr: "Kavat Smeeta", nameEn: "Smeeta Kavat",
-                sourceFr: "Incubateur du Vaisseau (10 Codes Génétiques de Kavat scannés sur Deimos).",
-                sourceEn: "Orbiter Incubator (10 Kavat Genetic Codes scanned on Deimos).",
-                detailsFr: ["Scanner les Kavats sauvages dans les missions de Deimos (ex: Terrorem / Horend)"],
-                detailsEn: ["Scan feral Kavats in Deimos missions (e.g., Terrorem / Horend)"]
-            },
-            {
-                id: "arch_amesha", category: "archwing", mr: 0, isPrime: false,
-                nameFr: "Amesha", nameEn: "Amesha",
-                sourceFr: "Dojo de Clan (Laboratoire Tenno). Indispensable en Railjack.",
-                sourceEn: "Clan Dojo (Tenno Lab). Best survivability Archwing for Railjack.",
-                detailsFr: ["Schéma + Harnais + Systèmes + Ailes : Laboratoire Tenno du Dojo de Clan"],
-                detailsEn: ["Blueprint + Harness + Systems + Wings: Tenno Lab in Clan Dojo"]
-            },
-            {
-                id: "arch_itzal", category: "archwing", mr: 0, isPrime: false,
-                nameFr: "Itzal", nameEn: "Itzal",
-                sourceFr: "Dojo de Clan (Laboratoire Tenno). Idéal pour farmer en monde ouvert.",
-                sourceEn: "Clan Dojo (Tenno Lab). Great for open-world loot vacuum.",
-                detailsFr: ["Schéma + Composants : Laboratoire Tenno du Dojo de Clan"],
-                detailsEn: ["Blueprint + Parts: Tenno Lab in Clan Dojo"]
-            },
-            {
-                id: "arch_odonata_prime", category: "archwing", mr: 0, isPrime: true, vaulted: true,
-                nameFr: "Odonata Prime", nameEn: "Odonata Prime",
-                sourceFr: "Prime Vault / Reliques Baro Ki'Teer (Axi O5).",
-                sourceEn: "Prime Vault / Baro Ki'Teer Relics (Axi O5).",
-                detailsFr: ["Relique Axi O5 vendue régulièrement par Baro Ki'Teer"],
-                detailsEn: ["Axi O5 Relic periodically sold by Baro Ki'Teer"]
-            }
+            // COMPANIONS
+            { id: "comp_panzer", cat: "companions", mr: 0, prime: false, nameFr: "Vulpaphyla Panzer", nameEn: "Panzer Vulpaphyla", srcFr: "Deimos (Necralisk - Fils, Pugilat & Revivification)", srcEn: "Deimos (Necralisk - Son, Conservation & Revivify)" },
+            { id: "comp_smeeta", cat: "companions", mr: 0, prime: false, nameFr: "Kavat Smeeta", nameEn: "Smeeta Kavat", srcFr: "Incubateur + 10 Codes Génétiques de Kavat", srcEn: "Incubator + 10 Kavat Genetic Codes" },
+            { id: "comp_dethcube", cat: "companions", mr: 0, prime: false, nameFr: "Dethcube", nameEn: "Dethcube", srcFr: "Marché (Schéma en Crédits)", srcEn: "Market (Credits Blueprint)" },
+            { id: "comp_nautilus_prime", cat: "companions", mr: 0, prime: true, nameFr: "Nautilus Prime", nameEn: "Nautilus Prime", srcFr: "Reliques du Néant (Lith, Meso, Neo, Axi)", srcEn: "Void Relics (Lith, Meso, Neo, Axi)" },
+            { id: "comp_carrier_prime", cat: "companions", mr: 0, prime: true, nameFr: "Carrier Prime", nameEn: "Carrier Prime", srcFr: "Résurgence Prime (Varzia) / Reliques Vaultées", srcEn: "Prime Resurgence (Varzia) / Vaulted Relics" },
+
+            // ARCHWINGS
+            { id: "arch_odonata", cat: "archwing", mr: 0, prime: false, nameFr: "Odonata", nameEn: "Odonata", srcFr: "Quête : L'Archwing", srcEn: "Quest: The Archwing" },
+            { id: "arch_amesha", cat: "archwing", mr: 0, prime: false, nameFr: "Amesha", nameEn: "Amesha", srcFr: "Dojo de Clan (Laboratoire Tenno)", srcEn: "Clan Dojo (Tenno Lab)" },
+            { id: "arch_itzal", cat: "archwing", mr: 0, prime: false, nameFr: "Itzal", nameEn: "Itzal", srcFr: "Dojo de Clan (Laboratoire Tenno)", srcEn: "Clan Dojo (Tenno Lab)" },
+            { id: "arch_odonata_prime", cat: "archwing", mr: 0, prime: true, nameFr: "Odonata Prime", nameEn: "Odonata Prime", srcFr: "Résurgence Prime / Reliques Baro Ki'Teer", srcEn: "Prime Resurgence / Baro Ki'Teer Relics" }
         ];
 
         /* =====================================================================
-           2. APPLICATION STATE & TRANSLATIONS
+           2. STATE, STORAGE & BILINGUAL DICTIONARY
            ===================================================================== */
-        const STORAGE_KEY = "tenno_arsenal_state_v2";
-        const LANG_STORAGE_KEY = "tenno_arsenal_lang_v2";
+        const STORAGE_PROGRESS_KEY = "wf_arsenal_progress_v1";
+        const STORAGE_CUSTOM_KEY   = "wf_arsenal_custom_v1";
+        const STORAGE_LANG_KEY     = "wf_arsenal_lang_v1";
 
-        let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || "fr";
-        let activeCategory = "all";
-        let itemsList = [...BUILTIN_ITEMS];
-        let progressMap = {}; // { itemId: "owned" | "mastered" }
-        let openDetailsSet = new Set();
+        let lang = "fr";
+        let activeCat = "all";
+        let quickFilter = "all"; // all | missing | owned | mastered | nonprime | prime
+        let progressData = {};     // { [id]: "owned" | "mastered" }
+        let customItems = [];      // user-added entries
 
-        const TRANSLATIONS = {
+        const I18N = {
             fr: {
-                subtitle: "Suivi d'équipement, Maîtrise et guide d'obtention Warframe",
-                export: "Exporter JSON",
-                import: "Importer JSON",
-                reset: "Réinitialiser",
-                statsHeading: "Progression Globale de l'Arsenal",
+                subtitle: "Suivi d'équipement, Maîtrise & sources de farm",
+                addCustom: "Ajouter",
+                exportJson: "Exporter JSON",
+                importJson: "Importer JSON",
+                resetBtn: "Réinitialiser",
+                globalTitle: "Progression Globale & Estimation XP Maîtrise",
                 lblMastered: "Maîtrisés :",
                 lblOwned: "Possédés :",
                 lblMissing: "Manquants :",
-                catAll: "Tout",
-                catWarframes: "Warframes",
-                catPrimary: "Principales",
-                catSecondary: "Secondaires",
-                catMelee: "Mêlée",
-                catCompanions: "Compagnons",
-                catArchwing: "Archwings",
-                searchPlaceholder: "Rechercher une Warframe, une arme, une relique, un boss...",
-                statusAll: "Statut : Tous",
-                statusMissing: "Manquants uniquement",
-                statusOwned: "Possédés (en cours)",
-                statusMastered: "Maîtrisés (Niv. Max)",
-                variantAll: "Variante : Toutes",
-                variantPrime: "Prime uniquement",
-                variantStandard: "Standard / Autres",
-                bulkBtn: "Marquer la sélection comme Maîtrisée",
-                autosaveHint: "Sauvegarde automatique active dans ce navigateur",
-                resultsCount: (n, total) => `${n} objet${n > 1 ? "s" : ""} affiché${n > 1 ? "s" : ""} sur ${total}`,
-                stateMissing: "Manquant",
-                stateOwned: "Possédé",
-                stateMastered: "Maîtrisé",
-                howToObtain: "Comment l'obtenir",
-                moreDetails: "Détails & Composants",
-                lessDetails: "Masquer les détails",
-                wikiText: "Ouvrir la fiche Wiki ↗",
-                emptyTitle: "Aucun équipement ne correspond à ta recherche",
-                emptyDesc: "Essaie de modifier les filtres ou le mot-clé recherché.",
-                emptyBtn: "Réinitialiser les filtres",
-                modalCancel: "Annuler",
-                bulkTitle: "Marquer la sélection comme Maîtrisée ?",
-                bulkDesc: (n) => `Tu vas marquer les ${n} équipements actuellement affichés comme "Maîtrisés (Niv. Max)". Idéal pour rattraper rapidement ton inventaire.`,
-                bulkConfirm: "Tout maîtriser",
-                resetTitle: "Réinitialiser toute ta progression ?",
-                resetDesc: "Toutes tes coches (Possédés et Maîtrisés) seront effacées. Pense à exporter un fichier JSON avant si besoin.",
-                resetConfirm: "Tout effacer",
-                toastSaved: "Progression enregistrée",
-                toastExported: "Fichier de sauvegarde téléchargé !",
-                toastImported: "Sauvegarde importée avec succès !",
-                toastImportErr: "Fichier JSON invalide.",
-                toastBulk: (n) => `${n} équipements marqués comme Maîtrisés !`,
-                toastReset: "Progression réinitialisée.",
-                codexReady: "CODEX ACTIF"
+                xpNote: "Estimation : 6 000 XP (Warframe / Compagnon / Archwing) • 3 000 XP (Arme)",
+                bulkCat: "Tout maîtriser (Catégorie)",
+                bulkFiltered: "Maîtriser la vue",
+                searchPlaceholder: "Rechercher (FR / EN) : nom, boss, relique, dojo, quête...",
+                cats: {
+                    all: "Tout",
+                    warframes: "Warframes",
+                    primary: "Principales",
+                    secondary: "Secondaires",
+                    melee: "Mêlée",
+                    companions: "Compagnons",
+                    archwing: "Archwings"
+                },
+                qfilters: {
+                    all: "Tous",
+                    missing: "Manquants",
+                    owned: "Possédés",
+                    mastered: "Maîtrisés",
+                    nonprime: "Farmable / Non-Prime",
+                    prime: "Prime"
+                },
+                states: {
+                    missing: "Manquant",
+                    owned: "Possédé",
+                    mastered: "Maîtrisé"
+                },
+                sourceLabel: "Obtention / Farm",
+                customPill: "Perso",
+                deleteCustom: "Supprimer",
+                resultsLabel: (shown, total) => `${shown} affiché${shown > 1 ? "s" : ""} sur ${total} équipements`,
+                catSub: (m, o, t) => `${m} maîtrisés • ${o} possédés / ${t}`,
+                emptyTitle: "Aucun équipement ne correspond aux filtres",
+                emptyDesc: "Modifie ta recherche ou clique sur réinitialiser pour afficher le catalogue.",
+                emptyReset: "Réinitialiser les filtres",
+                statusReady: "Catalogue chargé — Sauvegarde automatique active.",
+                statusSaved: "Progression mise à jour et sauvegardée.",
+                statusCustomAdded: (name) => `Élément personnalisé ajouté : ${name}`,
+                statusCustomDeleted: "Élément personnalisé supprimé.",
+                statusExported: "Sauvegarde JSON exportée avec succès.",
+                statusImported: (count) => `Sauvegarde restaurée (${count} entrées).`,
+                statusImportError: "Fichier JSON invalide ou corrompu.",
+                statusBulkDone: (count) => `${count} équipement${count > 1 ? "s" : ""} marqué${count > 1 ? "s" : ""} comme Maîtrisé${count > 1 ? "s" : ""}.`,
+                statusResetDone: "Progression réinitialisée.",
+                customModalTitle: "Ajouter un équipement personnalisé",
+                customModalDesc: "Ajoute une arme, Warframe ou compagnon supplémentaire à ton suivi.",
+                lblCustomFr: "Nom (FR / Principal) *",
+                lblCustomEn: "Nom (EN — optionnel)",
+                lblCustomCat: "Catégorie",
+                lblCustomMr: "Palier de Maîtrise (MR)",
+                lblCustomSrcFr: "Source de farm / obtention (FR)",
+                lblCustomSrcEn: "Farm / Drop Source (EN — optionnel)",
+                lblCustomPrime: "Variante Prime",
+                cancel: "Annuler",
+                save: "Enregistrer",
+                errNameRequired: "Merci d'indiquer un nom pour cet équipement.",
+                bulkCatTitle: "Tout maîtriser dans cette catégorie ?",
+                bulkCatBody: (catName, n) => `Marquer ${n} équipement${n > 1 ? "s" : ""} de la catégorie "${catName}" comme Maîtrisé${n > 1 ? "s" : ""} ?`,
+                bulkFiltTitle: "Maîtriser les éléments affichés ?",
+                bulkFiltBody: (n) => `Marquer les ${n} équipement${n > 1 ? "s" : ""} actuellement visible${n > 1 ? "s" : ""} comme Maîtrisé${n > 1 ? "s" : ""} ?`,
+                resetTitle: "Réinitialiser toute la progression ?",
+                resetBody: "Tous tes statuts (Possédé / Maîtrisé) seront effacés. Les éléments personnalisés sont conservés.",
+                confirmOk: "Confirmer"
             },
             en: {
-                subtitle: "Warframe Equipment Tracker, Mastery & Acquisition Guide",
-                export: "Export JSON",
-                import: "Import JSON",
-                reset: "Reset",
-                statsHeading: "Overall Arsenal Mastery Progress",
+                subtitle: "Equipment tracker, Mastery progress & farm sources",
+                addCustom: "Add Item",
+                exportJson: "Export JSON",
+                importJson: "Import JSON",
+                resetBtn: "Reset",
+                globalTitle: "Global Progress & Mastery XP Estimate",
                 lblMastered: "Mastered:",
                 lblOwned: "Owned:",
                 lblMissing: "Missing:",
-                catAll: "All",
-                catWarframes: "Warframes",
-                catPrimary: "Primary",
-                catSecondary: "Secondary",
-                catMelee: "Melee",
-                catCompanions: "Companions",
-                catArchwing: "Archwings",
-                searchPlaceholder: "Search Warframes, weapons, relics, bosses...",
-                statusAll: "Status: All",
-                statusMissing: "Missing Only",
-                statusOwned: "Owned (In Progress)",
-                statusMastered: "Mastered (Max Rank)",
-                variantAll: "Variant: All",
-                variantPrime: "Prime Only",
-                variantStandard: "Standard / Non-Prime",
-                bulkBtn: "Mark Filtered as Mastered",
-                autosaveHint: "Auto-save enabled in this browser",
-                resultsCount: (n, total) => `Showing ${n} of ${total} items`,
-                stateMissing: "Missing",
-                stateOwned: "Owned",
-                stateMastered: "Mastered",
-                howToObtain: "How to Obtain",
-                moreDetails: "Parts & Drop Locations",
-                lessDetails: "Hide Details",
-                wikiText: "Open Wiki Page ↗",
+                xpNote: "Estimate: 6,000 XP (Warframe / Companion / Archwing) • 3,000 XP (Weapon)",
+                bulkCat: "Master All (Category)",
+                bulkFiltered: "Master Filtered",
+                searchPlaceholder: "Search (FR / EN): name, boss, relic, dojo, quest...",
+                cats: {
+                    all: "All",
+                    warframes: "Warframes",
+                    primary: "Primary",
+                    secondary: "Secondary",
+                    melee: "Melee",
+                    companions: "Companions",
+                    archwing: "Archwings"
+                },
+                qfilters: {
+                    all: "All",
+                    missing: "Missing",
+                    owned: "Owned",
+                    mastered: "Mastered",
+                    nonprime: "Farmable / Non-Prime",
+                    prime: "Prime"
+                },
+                states: {
+                    missing: "Missing",
+                    owned: "Owned",
+                    mastered: "Mastered"
+                },
+                sourceLabel: "Acquisition / Farm",
+                customPill: "Custom",
+                deleteCustom: "Delete",
+                resultsLabel: (shown, total) => `Showing ${shown} of ${total} items`,
+                catSub: (m, o, t) => `${m} mastered • ${o} owned / ${t}`,
                 emptyTitle: "No equipment matches your filters",
-                emptyDesc: "Try clearing your search term or switching filters.",
-                emptyBtn: "Reset Filters",
-                modalCancel: "Cancel",
-                bulkTitle: "Mark filtered items as Mastered?",
-                bulkDesc: (n) => `You are about to mark all ${n} currently visible items as "Mastered (Max Rank)". Great for quickly catching up your existing arsenal.`,
-                bulkConfirm: "Master All",
+                emptyDesc: "Try another search query or reset filters to view items.",
+                emptyReset: "Reset Filters",
+                statusReady: "Catalog loaded — Auto-save enabled.",
+                statusSaved: "Progress updated and saved.",
+                statusCustomAdded: (name) => `Custom item added: ${name}`,
+                statusCustomDeleted: "Custom item removed.",
+                statusExported: "JSON backup exported successfully.",
+                statusImported: (count) => `Backup restored (${count} entries).`,
+                statusImportError: "Invalid or corrupted JSON backup file.",
+                statusBulkDone: (count) => `Marked ${count} item${count > 1 ? "s" : ""} as Mastered.`,
+                statusResetDone: "Progress has been reset.",
+                customModalTitle: "Add Custom Equipment",
+                customModalDesc: "Add an extra weapon, Warframe, or companion to your tracker.",
+                lblCustomFr: "Name (FR / Primary) *",
+                lblCustomEn: "Name (EN — optional)",
+                lblCustomCat: "Category",
+                lblCustomMr: "Mastery Rank (MR)",
+                lblCustomSrcFr: "Farm / Drop Source (FR)",
+                lblCustomSrcEn: "Farm / Drop Source (EN — optional)",
+                lblCustomPrime: "Prime Variant",
+                cancel: "Cancel",
+                save: "Save",
+                errNameRequired: "Please enter a name for this item.",
+                bulkCatTitle: "Master all in this category?",
+                bulkCatBody: (catName, n) => `Mark ${n} item${n > 1 ? "s" : ""} in "${catName}" as Mastered?`,
+                bulkFiltTitle: "Master filtered items?",
+                bulkFiltBody: (n) => `Mark all ${n} currently visible item${n > 1 ? "s" : ""} as Mastered?`,
                 resetTitle: "Reset all progress?",
-                resetDesc: "All your Owned and Mastered statuses will be cleared. Export a JSON backup first if you want to keep a copy.",
-                resetConfirm: "Reset Everything",
-                toastSaved: "Progress saved",
-                toastExported: "Backup JSON file downloaded!",
-                toastImported: "Backup restored successfully!",
-                toastImportErr: "Invalid JSON backup file.",
-                toastBulk: (n) => `${n} items marked as Mastered!`,
-                toastReset: "Progress has been reset.",
-                codexReady: "CODEX READY"
+                resetBody: "All Owned and Mastered statuses will be cleared. Custom items remain intact.",
+                confirmOk: "Confirm"
             }
         };
 
         /* =====================================================================
-           3. INITIALIZATION & STORAGE
+           3. INITIALIZATION & STORAGE HELPERS
            ===================================================================== */
-        function initApp() {
+        function bootTracker() {
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    progressMap = JSON.parse(saved) || {};
+                const savedLang = localStorage.getItem(STORAGE_LANG_KEY);
+                if (savedLang === "fr" || savedLang === "en") {
+                    lang = savedLang;
+                }
+            } catch (_) {
+                lang = "fr";
+            }
+
+            try {
+                const rawProg = localStorage.getItem(STORAGE_PROGRESS_KEY);
+                if (rawProg) {
+                    const parsed = JSON.parse(rawProg);
+                    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+                        progressData = parsed;
+                    }
                 }
             } catch (err) {
-                progressMap = {};
+                progressData = {};
+                setBanner(I18N[lang].statusImportError, "warning");
             }
 
-            applyTranslations();
-            renderAll();
-
-            // Optional silent background enrichment from WFCD GitHub JSON if reachable
-            trySilentCodexSync();
-        }
-
-        function saveState() {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(progressMap));
-            } catch (err) {
-                // Ignore storage quota errors gracefully
+                const rawCustom = localStorage.getItem(STORAGE_CUSTOM_KEY);
+                if (rawCustom) {
+                    const parsedCustom = JSON.parse(rawCustom);
+                    if (Array.isArray(parsedCustom)) {
+                        customItems = parsedCustom;
+                    }
+                }
+            } catch (_) {
+                customItems = [];
             }
-        }
 
-        function getStatus(itemId) {
-            return progressMap[itemId] || "missing";
-        }
-
-        function setItemStatus(itemId, status) {
-            if (status === "missing") {
-                delete progressMap[itemId];
-            } else {
-                progressMap[itemId] = status;
-            }
-            saveState();
+            applyStaticLabels();
             renderAll();
-            const t = TRANSLATIONS[currentLang];
-            showToast(t.toastSaved, status === "mastered" ? "orokin" : "cyan");
+            setBanner(I18N[lang].statusReady, "info");
         }
 
-        function toggleDetails(itemId) {
-            if (openDetailsSet.has(itemId)) {
-                openDetailsSet.delete(itemId);
-            } else {
-                openDetailsSet.add(itemId);
+        function persistProgress() {
+            try {
+                localStorage.setItem(STORAGE_PROGRESS_KEY, JSON.stringify(progressData));
+                return true;
+            } catch (err) {
+                setBanner("localStorage indisponible — exporte un JSON pour sauvegarder.", "warning");
+                return false;
             }
-            renderItems();
+        }
+
+        function persistCustomItems() {
+            try {
+                localStorage.setItem(STORAGE_CUSTOM_KEY, JSON.stringify(customItems));
+                return true;
+            } catch (_) {
+                setBanner("Impossible d'enregistrer l'élément personnalisé.", "warning");
+                return false;
+            }
+        }
+
+        function getAllItems() {
+            return [...BASE_CATALOG, ...customItems];
+        }
+
+        function getItemState(id) {
+            const st = progressData[id];
+            return (st === "owned" || st === "mastered") ? st : "missing";
+        }
+
+        function getXpForItem(item) {
+            if (item.cat === "warframes" || item.cat === "companions" || item.cat === "archwing") {
+                return 6000;
+            }
+            return 3000;
+        }
+
+        function setBanner(message, tone = "info") {
+            const banner = document.getElementById("status-banner");
+            const textEl = document.getElementById("status-banner-text");
+            if (!banner || !textEl) return;
+            banner.className = `status-banner ${tone}`;
+            textEl.textContent = message;
         }
 
         /* =====================================================================
-           4. OPTIONAL SILENT BACKGROUND SYNC (NEVER BLOCKS UI)
+           4. LANGUAGE & STATIC UI LABELS
            ===================================================================== */
-        async function trySilentCodexSync() {
+        function changeLanguage(newLang) {
+            if (newLang !== "fr" && newLang !== "en") return;
+            lang = newLang;
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                const baseUrl = "https://raw.githubusercontent.com/WFCD/warframe-items/master/data/json";
-                const [wfRes, priRes, secRes, melRes, i18nRes] = await Promise.all([
-                    fetch(`${baseUrl}/Warframes.json`, { signal: controller.signal }),
-                    fetch(`${baseUrl}/Primary.json`, { signal: controller.signal }),
-                    fetch(`${baseUrl}/Secondary.json`, { signal: controller.signal }),
-                    fetch(`${baseUrl}/Melee.json`, { signal: controller.signal }),
-                    fetch(`${baseUrl}/i18n.json`, { signal: controller.signal }).catch(() => null)
-                ]);
-                clearTimeout(timeoutId);
-
-                if (!wfRes.ok || !priRes.ok || !secRes.ok || !melRes.ok) return;
-
-                const [wfs, pris, secs, mels, i18n] = await Promise.all([
-                    wfRes.json(),
-                    priRes.json(),
-                    secRes.json(),
-                    melRes.json(),
-                    i18nRes && i18nRes.ok ? i18nRes.json() : Promise.resolve({})
-                ]);
-
-                const existingNames = new Set(itemsList.map(i => i.nameEn.toLowerCase()));
-                const merged = [...itemsList];
-
-                const ingest = (arr, category) => {
-                    if (!Array.isArray(arr)) return;
-                    arr.forEach(raw => {
-                        if (!raw || raw.masterable === false || !raw.name || !raw.uniqueName) return;
-                        if (raw.uniqueName.includes("/PvP/")) return;
-                        if (existingNames.has(raw.name.toLowerCase())) return;
-                        existingNames.add(raw.name.toLowerCase());
-
-                        const frObj = i18n && i18n[raw.uniqueName] && i18n[raw.uniqueName].fr ? i18n[raw.uniqueName].fr : {};
-                        const isPrime = raw.name.toLowerCase().includes("prime") || Boolean(raw.isPrime);
-
-                        let relics = [];
-                        let dropLocs = [];
-                        if (Array.isArray(raw.components)) {
-                            raw.components.forEach(c => {
-                                if (Array.isArray(c.drops)) {
-                                    c.drops.forEach(d => {
-                                        if (d.location) {
-                                            if (d.location.includes("Relic")) {
-                                                relics.push(d.location.replace(" Relic", ""));
-                                            } else {
-                                                dropLocs.push(d.location);
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        const uniqueRelics = [...new Set(relics)].slice(0, 6);
-                        const uniqueLocs = [...new Set(dropLocs)].slice(0, 3);
-
-                        let srcEn = "Market Blueprint, Clan Dojo Research, or Quest reward.";
-                        let srcFr = "Schéma sur le Marché, Laboratoire de Dojo ou récompense de Quête.";
-
-                        if (raw.vaulted) {
-                            srcEn = "Prime Vault (Prime Resurgence or Player Trading).";
-                            srcFr = "Prime Vault (Résurgence Prime ou échange entre joueurs).";
-                        } else if (uniqueRelics.length > 0) {
-                            srcEn = `Void Relics: ${uniqueRelics.join(", ")}`;
-                            srcFr = `Reliques du Néant : ${uniqueRelics.join(", ")}`;
-                        } else if (uniqueLocs.length > 0) {
-                            srcEn = `Drops from: ${uniqueLocs.join(" • ")}`;
-                            srcFr = `S'obtient via : ${uniqueLocs.join(" • ")}`;
-                        } else if (raw.name.startsWith("Kuva ")) {
-                            srcEn = "Vanquish a Kuva Lich (Cassini, Saturn).";
-                            srcFr = "Vaincre une Liche Kuva (Cassini, Saturne).";
-                        } else if (raw.name.startsWith("Tenet ")) {
-                            srcEn = "Vanquish a Sister of Parvos (Hydra, Pluto) or Ergo Glast.";
-                            srcFr = "Vaincre une Sœur de Parvos (Hydra, Pluton) ou Ergo Glast.";
-                        }
-
-                        merged.push({
-                            id: raw.uniqueName,
-                            category,
-                            mr: raw.masteryReq || 0,
-                            isPrime,
-                            vaulted: Boolean(raw.vaulted),
-                            nameEn: raw.name,
-                            nameFr: frObj.name || raw.name,
-                            sourceEn: srcEn,
-                            sourceFr: srcFr,
-                            detailsEn: uniqueLocs.length > 0 ? uniqueLocs : [srcEn],
-                            detailsFr: uniqueLocs.length > 0 ? uniqueLocs : [srcFr]
-                        });
-                    });
-                };
-
-                ingest(wfs, "warframes");
-                ingest(pris, "primary");
-                ingest(secs, "secondary");
-                ingest(mels, "melee");
-
-                if (merged.length > itemsList.length) {
-                    itemsList = merged;
-                    const badge = document.getElementById("codex-status-badge");
-                    if (badge) badge.textContent = `CODEX LIVE (${itemsList.length})`;
-                    renderAll();
-                }
-            } catch (e) {
-                // Silent failure: built-in database remains active with zero interruption
-            }
-        }
-
-        /* =====================================================================
-           5. LANGUAGE SWITCHING
-           ===================================================================== */
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem(LANG_STORAGE_KEY, lang);
-            applyTranslations();
+                localStorage.setItem(STORAGE_LANG_KEY, lang);
+            } catch (_) {}
+            document.documentElement.lang = lang;
+            applyStaticLabels();
             renderAll();
         }
 
-        function applyTranslations() {
-            const t = TRANSLATIONS[currentLang];
-            document.documentElement.lang = currentLang;
+        function applyStaticLabels() {
+            const t = I18N[lang];
+            document.getElementById("lang-fr").classList.toggle("active", lang === "fr");
+            document.getElementById("lang-en").classList.toggle("active", lang === "en");
 
-            document.getElementById("btn-lang-fr").classList.toggle("active", currentLang === "fr");
-            document.getElementById("btn-lang-en").classList.toggle("active", currentLang === "en");
-
-            document.getElementById("ui-subtitle").textContent = t.subtitle;
-            document.getElementById("ui-export").textContent = t.export;
-            document.getElementById("ui-import").textContent = t.import;
-            document.getElementById("ui-reset").textContent = t.reset;
-            document.getElementById("ui-stats-heading").textContent = t.statsHeading;
-            document.getElementById("ui-lbl-mastered").textContent = t.lblMastered;
-            document.getElementById("ui-lbl-owned").textContent = t.lblOwned;
-            document.getElementById("ui-lbl-missing").textContent = t.lblMissing;
+            document.getElementById("txt-subtitle").textContent = t.subtitle;
+            document.getElementById("txt-add-custom").textContent = t.addCustom;
+            document.getElementById("txt-export").textContent = t.exportJson;
+            document.getElementById("txt-import").textContent = t.importJson;
+            document.getElementById("txt-reset").textContent = t.resetBtn;
+            document.getElementById("txt-global-title").textContent = t.globalTitle;
+            document.getElementById("txt-lbl-mastered").textContent = t.lblMastered;
+            document.getElementById("txt-lbl-owned").textContent = t.lblOwned;
+            document.getElementById("txt-lbl-missing").textContent = t.lblMissing;
+            document.getElementById("txt-xp-note").textContent = t.xpNote;
+            document.getElementById("txt-bulk-cat").textContent = t.bulkCat;
+            document.getElementById("txt-bulk-filtered").textContent = t.bulkFiltered;
             document.getElementById("search-input").placeholder = t.searchPlaceholder;
-            document.getElementById("ui-bulk-btn").textContent = t.bulkBtn;
-            document.getElementById("ui-autosave-hint").textContent = t.autosaveHint;
-            document.getElementById("ui-empty-title").textContent = t.emptyTitle;
-            document.getElementById("ui-empty-desc").textContent = t.emptyDesc;
-            document.getElementById("ui-empty-btn").textContent = t.emptyBtn;
-            document.getElementById("modal-cancel-btn").textContent = t.modalCancel;
+            document.getElementById("txt-empty-title").textContent = t.emptyTitle;
+            document.getElementById("txt-empty-desc").textContent = t.emptyDesc;
+            document.getElementById("txt-empty-reset").textContent = t.emptyReset;
 
-            const statusSel = document.getElementById("status-filter");
-            statusSel.options[0].text = t.statusAll;
-            statusSel.options[1].text = t.statusMissing;
-            statusSel.options[2].text = t.statusOwned;
-            statusSel.options[3].text = t.statusMastered;
-
-            const variantSel = document.getElementById("variant-filter");
-            variantSel.options[0].text = t.variantAll;
-            variantSel.options[1].text = t.variantPrime;
-            variantSel.options[2].text = t.variantStandard;
+            // Custom modal labels
+            document.getElementById("custom-modal-title").textContent = t.customModalTitle;
+            document.getElementById("custom-modal-desc").textContent = t.customModalDesc;
+            document.getElementById("lbl-custom-fr").textContent = t.lblCustomFr;
+            document.getElementById("lbl-custom-en").textContent = t.lblCustomEn;
+            document.getElementById("lbl-custom-cat").textContent = t.lblCustomCat;
+            document.getElementById("lbl-custom-mr").textContent = t.lblCustomMr;
+            document.getElementById("lbl-custom-src-fr").textContent = t.lblCustomSrcFr;
+            document.getElementById("lbl-custom-src-en").textContent = t.lblCustomSrcEn;
+            document.getElementById("lbl-custom-prime").textContent = t.lblCustomPrime;
+            document.getElementById("btn-custom-cancel").textContent = t.cancel;
+            document.getElementById("btn-custom-save").textContent = t.save;
+            document.getElementById("btn-confirm-cancel").textContent = t.cancel;
         }
 
         /* =====================================================================
-           6. RENDERING STATS, TABS & EQUIPMENT CARDS
+           5. RENDERING PROGRESS, TABS, QUICK FILTERS & CATALOG
            ===================================================================== */
         function renderAll() {
-            renderStats();
+            renderProgress();
             renderCategoryTabs();
-            renderItems();
+            renderQuickFilters();
+            renderCatalog();
         }
 
-        function renderStats() {
-            const total = itemsList.length;
-            let mastered = 0;
-            let owned = 0;
+        function renderProgress() {
+            const t = I18N[lang];
+            const all = getAllItems();
+            const total = all.length;
 
-            itemsList.forEach(item => {
-                const st = getStatus(item.id);
-                if (st === "mastered") mastered++;
-                else if (st === "owned") owned++;
+            let masteredCount = 0;
+            let ownedCount = 0;
+            let estimatedXp = 0;
+
+            all.forEach(item => {
+                const st = getItemState(item.id);
+                if (st === "mastered") {
+                    masteredCount++;
+                    estimatedXp += getXpForItem(item);
+                } else if (st === "owned") {
+                    ownedCount++;
+                }
             });
 
-            const missing = total - mastered - owned;
-            const masteredPct = total > 0 ? Math.round((mastered / total) * 100) : 0;
-            const ownedPct = total > 0 ? Math.round((owned / total) * 100) : 0;
+            const missingCount = Math.max(0, total - masteredCount - ownedCount);
+            const masteredPct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
+            const ownedPct = total > 0 ? Math.round((ownedCount / total) * 100) : 0;
 
-            document.getElementById("count-mastered").textContent = `${mastered} / ${total}`;
-            document.getElementById("count-owned").textContent = owned;
-            document.getElementById("count-missing").textContent = missing;
-            document.getElementById("count-percent").textContent = `${masteredPct}%`;
+            document.getElementById("stat-mastered").textContent = `${masteredCount} / ${total}`;
+            document.getElementById("stat-owned").textContent = ownedCount;
+            document.getElementById("stat-missing").textContent = missingCount;
+            document.getElementById("stat-xp").textContent = `${estimatedXp.toLocaleString()} XP`;
+            document.getElementById("stat-percent").textContent = `${masteredPct}%`;
 
             document.getElementById("bar-mastered").style.width = `${masteredPct}%`;
             document.getElementById("bar-owned").style.width = `${ownedPct}%`;
+
+            // Per-category cards
+            const cats = ["warframes", "primary", "secondary", "melee", "companions", "archwing"];
+            const catGrid = document.getElementById("category-bars-grid");
+            catGrid.innerHTML = cats.map(catKey => {
+                const catItems = all.filter(i => i.cat === catKey);
+                const cTotal = catItems.length;
+                const cMastered = catItems.filter(i => getItemState(i.id) === "mastered").length;
+                const cOwned = catItems.filter(i => getItemState(i.id) === "owned").length;
+                const cPct = cTotal > 0 ? Math.round((cMastered / cTotal) * 100) : 0;
+                const isSelected = activeCat === catKey;
+
+                return `
+                    <div class="cat-mini-card ${isSelected ? "selected" : ""}" onclick="selectCategory('${catKey}')">
+                        <div class="cat-mini-top">
+                            <span>${escapeHtml(t.cats[catKey])}</span>
+                            <span class="cat-mini-pct">${cPct}%</span>
+                        </div>
+                        <div class="mini-track">
+                            <div class="mini-fill" style="width: ${cPct}%;"></div>
+                        </div>
+                        <div class="cat-mini-sub">${escapeHtml(t.catSub(cMastered, cOwned, cTotal))}</div>
+                    </div>
+                `;
+            }).join("");
         }
 
         function renderCategoryTabs() {
-            const t = TRANSLATIONS[currentLang];
-            const cats = [
-                { key: "all", label: t.catAll },
-                { key: "warframes", label: t.catWarframes },
-                { key: "primary", label: t.catPrimary },
-                { key: "secondary", label: t.catSecondary },
-                { key: "melee", label: t.catMelee },
-                { key: "companions", label: t.catCompanions },
-                { key: "archwing", label: t.catArchwing }
-            ];
+            const t = I18N[lang];
+            const all = getAllItems();
+            const keys = ["all", "warframes", "primary", "secondary", "melee", "companions", "archwing"];
 
-            const container = document.getElementById("category-tabs");
-            container.innerHTML = cats.map(c => {
-                const count = c.key === "all"
-                    ? itemsList.length
-                    : itemsList.filter(i => i.category === c.key).length;
-                const activeClass = activeCategory === c.key ? "active" : "";
+            const tabsEl = document.getElementById("category-tabs");
+            tabsEl.innerHTML = keys.map(key => {
+                const count = key === "all" ? all.length : all.filter(i => i.cat === key).length;
+                const activeCls = activeCat === key ? "active" : "";
                 return `
-                    <button type="button" class="tab-btn ${activeClass}" onclick="selectCategory('${c.key}')">
-                        <span>${escapeHtml(c.label)}</span>
-                        <span class="tab-count">${count}</span>
+                    <button type="button" class="tab-pill ${activeCls}" onclick="selectCategory('${key}')">
+                        <span>${escapeHtml(t.cats[key])}</span>
+                        <span class="tab-badge">${count}</span>
+                    </button>
+                `;
+            }).join("");
+        }
+
+        function renderQuickFilters() {
+            const t = I18N[lang];
+            const keys = ["all", "missing", "owned", "mastered", "nonprime", "prime"];
+            const qEl = document.getElementById("quick-filters");
+            qEl.innerHTML = keys.map(key => {
+                const cls = quickFilter === key ? "active" : "";
+                return `
+                    <button type="button" class="qfilter-btn ${cls}" onclick="selectQuickFilter('${key}')">
+                        ${escapeHtml(t.qfilters[key])}
                     </button>
                 `;
             }).join("");
         }
 
         function selectCategory(catKey) {
-            activeCategory = catKey;
+            activeCat = catKey;
             renderCategoryTabs();
-            renderItems();
+            renderProgress();
+            renderCatalog();
         }
 
-        function getFilteredItems() {
+        function selectQuickFilter(filterKey) {
+            quickFilter = filterKey;
+            renderQuickFilters();
+            renderCatalog();
+        }
+
+        function getFilteredCatalog() {
+            const all = getAllItems();
             const query = document.getElementById("search-input").value.trim().toLowerCase();
-            const statusFilter = document.getElementById("status-filter").value;
-            const variantFilter = document.getElementById("variant-filter").value;
 
-            return itemsList.filter(item => {
-                if (activeCategory !== "all" && item.category !== activeCategory) return false;
+            return all.filter(item => {
+                if (activeCat !== "all" && item.cat !== activeCat) return false;
 
-                const st = getStatus(item.id);
-                if (statusFilter !== "all" && st !== statusFilter) return false;
-
-                if (variantFilter === "prime" && !item.isPrime) return false;
-                if (variantFilter === "standard" && item.isPrime) return false;
+                const st = getItemState(item.id);
+                if (quickFilter === "missing" && st !== "missing") return false;
+                if (quickFilter === "owned" && st !== "owned") return false;
+                if (quickFilter === "mastered" && st !== "mastered") return false;
+                if (quickFilter === "nonprime" && item.prime) return false;
+                if (quickFilter === "prime" && !item.prime) return false;
 
                 if (query) {
-                    const haystack = [
+                    const blob = [
                         item.nameFr,
                         item.nameEn,
-                        item.sourceFr,
-                        item.sourceEn
+                        item.srcFr,
+                        item.srcEn,
+                        `mr ${item.mr}`
                     ].join(" ").toLowerCase();
-                    if (!haystack.includes(query)) return false;
+                    if (!blob.includes(query)) return false;
                 }
 
                 return true;
             });
         }
 
-        function renderItems() {
-            const t = TRANSLATIONS[currentLang];
-            const filtered = getFilteredItems();
-            const grid = document.getElementById("items-grid");
-            const emptyState = document.getElementById("empty-state");
-            const summary = document.getElementById("results-summary");
+        function renderCatalog() {
+            const t = I18N[lang];
+            const all = getAllItems();
+            const filtered = getFilteredCatalog();
+            const grid = document.getElementById("catalog-grid");
+            const emptyBox = document.getElementById("empty-box");
 
-            summary.textContent = t.resultsCount(filtered.length, itemsList.length);
+            document.getElementById("results-count-label").textContent = t.resultsLabel(filtered.length, all.length);
 
             if (filtered.length === 0) {
                 grid.style.display = "none";
-                emptyState.style.display = "block";
+                emptyBox.style.display = "block";
                 return;
             }
 
-            emptyState.style.display = "none";
+            emptyBox.style.display = "none";
             grid.style.display = "grid";
 
-            const catLabels = {
-                warframes: t.catWarframes,
-                primary: t.catPrimary,
-                secondary: t.catSecondary,
-                melee: t.catMelee,
-                companions: t.catCompanions,
-                archwing: t.catArchwing
-            };
-
-            // Render up to 120 items at once for instant responsiveness
-            const displaySlice = filtered.slice(0, 120);
-
-            grid.innerHTML = displaySlice.map(item => {
-                const st = getStatus(item.id);
-                const mainName = currentLang === "fr" ? item.nameFr : item.nameEn;
-                const altName = currentLang === "fr" ? item.nameEn : item.nameFr;
-                const sourceText = currentLang === "fr" ? item.sourceFr : item.sourceEn;
-                const detailsList = currentLang === "fr" ? item.detailsFr : item.detailsEn;
-                const isDetailsOpen = openDetailsSet.has(item.id);
-
-                const wikiSlug = encodeURIComponent(
-                    (currentLang === "fr" ? item.nameFr : item.nameEn).replace(/\s*\(Incarnon\)/i, "").replace(/ /g, "_")
-                );
-                const wikiUrl = currentLang === "fr"
-                    ? `https://warframe.fandom.com/fr/wiki/${wikiSlug}`
-                    : `https://wiki.warframe.com/w/${wikiSlug}`;
-
+            grid.innerHTML = filtered.map(item => {
+                const st = getItemState(item.id);
+                const mainTitle = lang === "fr" ? item.nameFr : (item.nameEn || item.nameFr);
+                const secondaryTitle = lang === "fr"
+                    ? (item.nameEn && item.nameEn !== item.nameFr ? item.nameEn : "")
+                    : (item.nameFr && item.nameFr !== item.nameEn ? item.nameFr : "");
+                const sourceText = lang === "fr" ? item.srcFr : (item.srcEn || item.srcFr);
+                const xpVal = getXpForItem(item).toLocaleString();
                 const safeId = escapeAttr(item.id);
 
                 return `
-                    <article class="item-card status-${st}">
+                    <article class="eq-card state-${st}">
                         <div>
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-badges">
-                                        <span class="badge badge-cat">${escapeHtml(catLabels[item.category] || item.category)}</span>
-                                        <span class="badge badge-mr">MR ${item.mr}</span>
-                                        ${item.isPrime ? `<span class="badge badge-prime">PRIME</span>` : ""}
-                                        ${item.vaulted ? `<span class="badge badge-vault">VAULT</span>` : ""}
-                                    </div>
-                                    <h2 class="item-name">${escapeHtml(mainName)}</h2>
-                                    ${altName !== mainName ? `<div class="item-alt-name">${escapeHtml(altName)}</div>` : ""}
+                            <div class="eq-badges">
+                                <span class="pill pill-cat">${escapeHtml(t.cats[item.cat] || item.cat)}</span>
+                                <span class="pill pill-mr">MR ${Number(item.mr) || 0}</span>
+                                ${item.prime ? `<span class="pill pill-prime">PRIME</span>` : ""}
+                                ${item.custom ? `<span class="pill pill-custom">${escapeHtml(t.customPill)}</span>` : ""}
+                            </div>
+                            <h2 class="eq-title">${escapeHtml(mainTitle)}</h2>
+                            ${secondaryTitle ? `<div class="eq-subtitle">${escapeHtml(secondaryTitle)}</div>` : ""}
+                        </div>
+
+                        <div class="tri-state" role="group" aria-label="${escapeAttr(mainTitle)}">
+                            <button type="button" class="tri-btn ${st === "missing" ? "active-missing" : ""}" onclick="updateItemState('${safeId}', 'missing')">
+                                ${escapeHtml(t.states.missing)}
+                            </button>
+                            <button type="button" class="tri-btn ${st === "owned" ? "active-owned" : ""}" onclick="updateItemState('${safeId}', 'owned')">
+                                ${escapeHtml(t.states.owned)}
+                            </button>
+                            <button type="button" class="tri-btn ${st === "mastered" ? "active-mastered" : ""}" onclick="updateItemState('${safeId}', 'mastered')">
+                                ${escapeHtml(t.states.mastered)}
+                            </button>
+                        </div>
+
+                        <div class="source-box">
+                            <div class="source-top">
+                                <span class="source-label">${escapeHtml(t.sourceLabel)}</span>
+                                <span class="source-xp">+${xpVal} XP</span>
+                            </div>
+                            <div class="source-text">${escapeHtml(sourceText)}</div>
+                            ${item.custom ? `
+                                <div class="card-actions-foot">
+                                    <button type="button" class="link-btn" onclick="deleteCustomItem('${safeId}')">
+                                        ${escapeHtml(t.deleteCustom)}
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- 3-State Selector -->
-                        <div class="state-selector" role="group">
-                            <button type="button" class="state-btn ${st === "missing" ? "active-missing" : ""}" onclick="setItemStatus('${safeId}', 'missing')">
-                                ○ ${escapeHtml(t.stateMissing)}
-                            </button>
-                            <button type="button" class="state-btn ${st === "owned" ? "active-owned" : ""}" onclick="setItemStatus('${safeId}', 'owned')">
-                                ◐ ${escapeHtml(t.stateOwned)}
-                            </button>
-                            <button type="button" class="state-btn ${st === "mastered" ? "active-mastered" : ""}" onclick="setItemStatus('${safeId}', 'mastered')">
-                                ★ ${escapeHtml(t.stateMastered)}
-                            </button>
-                        </div>
-
-                        <!-- Acquisition Guide Box -->
-                        <div class="obtain-box">
-                            <div class="obtain-header" onclick="toggleDetails('${safeId}')">
-                                <span class="obtain-label">✦ ${escapeHtml(t.howToObtain)}</span>
-                                <span style="font-size: 0.72rem; color: var(--text-secondary);">
-                                    ${isDetailsOpen ? "▲" : "▼"}
-                                </span>
-                            </div>
-                            <div class="obtain-text">${escapeHtml(sourceText)}</div>
-                            <div class="obtain-details ${isDetailsOpen ? "open" : ""}">
-                                <ul>
-                                    ${detailsList.map(line => `<li>${escapeHtml(line)}</li>`).join("")}
-                                </ul>
-                                <a class="wiki-link" href="${wikiUrl}" target="_blank" rel="noopener noreferrer">
-                                    ${escapeHtml(t.wikiText)}
-                                </a>
-                            </div>
+                            ` : ""}
                         </div>
                     </article>
                 `;
             }).join("");
         }
 
-        function resetFilters() {
-            activeCategory = "all";
+        function resetAllFilters() {
+            activeCat = "all";
+            quickFilter = "all";
             document.getElementById("search-input").value = "";
-            document.getElementById("status-filter").value = "all";
-            document.getElementById("variant-filter").value = "all";
             renderAll();
         }
 
         /* =====================================================================
-           7. BULK ACTIONS, BACKUP EXPORT/IMPORT & MODAL
+           6. STATE MUTATIONS & BULK ACTIONS
            ===================================================================== */
-        function confirmBulkMaster() {
-            const filtered = getFilteredItems();
-            if (filtered.length === 0) return;
-            const t = TRANSLATIONS[currentLang];
+        function updateItemState(id, nextState) {
+            if (nextState === "missing") {
+                delete progressData[id];
+            } else {
+                progressData[id] = nextState;
+            }
+            if (persistProgress()) {
+                renderAll();
+                setBanner(I18N[lang].statusSaved, "success");
+            }
+        }
 
-            openModal(t.bulkTitle, t.bulkDesc(filtered.length), t.bulkConfirm, () => {
-                filtered.forEach(item => {
-                    progressMap[item.id] = "mastered";
+        function requestBulkCategoryMaster() {
+            const t = I18N[lang];
+            const all = getAllItems();
+            const targets = activeCat === "all" ? all : all.filter(i => i.cat === activeCat);
+            if (targets.length === 0) return;
+
+            const catLabel = t.cats[activeCat] || activeCat;
+            openConfirmModal(t.bulkCatTitle, t.bulkCatBody(catLabel, targets.length), () => {
+                targets.forEach(item => {
+                    progressData[item.id] = "mastered";
                 });
-                saveState();
+                persistProgress();
                 renderAll();
-                showToast(t.toastBulk(filtered.length), "orokin");
+                setBanner(t.statusBulkDone(targets.length), "success");
             });
         }
 
-        function confirmReset() {
-            const t = TRANSLATIONS[currentLang];
-            openModal(t.resetTitle, t.resetDesc, t.resetConfirm, () => {
-                progressMap = {};
-                saveState();
+        function requestBulkFilteredMaster() {
+            const t = I18N[lang];
+            const targets = getFilteredCatalog();
+            if (targets.length === 0) return;
+
+            openConfirmModal(t.bulkFiltTitle, t.bulkFiltBody(targets.length), () => {
+                targets.forEach(item => {
+                    progressData[item.id] = "mastered";
+                });
+                persistProgress();
                 renderAll();
-                showToast(t.toastReset, "cyan");
+                setBanner(t.statusBulkDone(targets.length), "success");
             });
         }
 
-        function openModal(title, bodyText, confirmLabel, onConfirm) {
-            document.getElementById("modal-title").textContent = title;
-            document.getElementById("modal-body").textContent = bodyText;
-            const confirmBtn = document.getElementById("modal-confirm-btn");
-            confirmBtn.textContent = confirmLabel;
-            confirmBtn.onclick = () => {
+        function requestResetAll() {
+            const t = I18N[lang];
+            openConfirmModal(t.resetTitle, t.resetBody, () => {
+                progressData = {};
+                persistProgress();
+                renderAll();
+                setBanner(t.statusResetDone, "info");
+            });
+        }
+
+        /* =====================================================================
+           7. CUSTOM ITEMS & MODALS
+           ===================================================================== */
+        function openCustomModal() {
+            document.getElementById("custom-name-fr").value = "";
+            document.getElementById("custom-name-en").value = "";
+            document.getElementById("custom-cat").value = activeCat !== "all" ? activeCat : "warframes";
+            document.getElementById("custom-mr").value = "0";
+            document.getElementById("custom-source-fr").value = "";
+            document.getElementById("custom-source-en").value = "";
+            document.getElementById("custom-is-prime").checked = false;
+            document.getElementById("custom-modal").classList.add("open");
+            document.getElementById("custom-name-fr").focus();
+        }
+
+        function saveCustomItem() {
+            const t = I18N[lang];
+            const nameFr = document.getElementById("custom-name-fr").value.trim();
+            const nameEn = document.getElementById("custom-name-en").value.trim() || nameFr;
+            const cat = document.getElementById("custom-cat").value;
+            const mrRaw = parseInt(document.getElementById("custom-mr").value, 10);
+            const mr = Number.isFinite(mrRaw) ? Math.min(30, Math.max(0, mrRaw)) : 0;
+            const srcFr = document.getElementById("custom-source-fr").value.trim() || "Source personnalisée / Custom source";
+            const srcEn = document.getElementById("custom-source-en").value.trim() || srcFr;
+            const prime = document.getElementById("custom-is-prime").checked;
+
+            if (!nameFr) {
+                setBanner(t.errNameRequired, "error");
+                closeModal("custom-modal");
+                return;
+            }
+
+            const newEntry = {
+                id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                cat,
+                mr,
+                prime,
+                custom: true,
+                nameFr,
+                nameEn,
+                srcFr,
+                srcEn
+            };
+
+            customItems.push(newEntry);
+            persistCustomItems();
+            closeModal("custom-modal");
+            renderAll();
+            setBanner(t.statusCustomAdded(lang === "fr" ? nameFr : nameEn), "success");
+        }
+
+        function deleteCustomItem(id) {
+            customItems = customItems.filter(item => item.id !== id);
+            delete progressData[id];
+            persistCustomItems();
+            persistProgress();
+            renderAll();
+            setBanner(I18N[lang].statusCustomDeleted, "info");
+        }
+
+        function openConfirmModal(title, body, onConfirm) {
+            const t = I18N[lang];
+            document.getElementById("confirm-modal-title").textContent = title;
+            document.getElementById("confirm-modal-body").textContent = body;
+            const okBtn = document.getElementById("btn-confirm-ok");
+            okBtn.textContent = t.confirmOk;
+            okBtn.onclick = () => {
                 onConfirm();
-                closeModal();
+                closeModal("confirm-modal");
             };
             document.getElementById("confirm-modal").classList.add("open");
         }
 
-        function closeModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            document.getElementById("confirm-modal").classList.remove("open");
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.remove("open");
         }
 
-        function exportBackup() {
-            const data = {
-                app: "TennoArsenalTracker",
-                exportedAt: new Date().toISOString(),
-                progress: progressMap
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `warframe-arsenal-backup-${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showToast(TRANSLATIONS[currentLang].toastExported, "orokin");
+        function handleModalOverlayClick(event, modalId) {
+            if (event.target === event.currentTarget) {
+                closeModal(modalId);
+            }
         }
 
-        function importBackup(event) {
-            const file = event.target.files[0];
+        /* =====================================================================
+           8. EXPORT / IMPORT JSON BACKUP
+           ===================================================================== */
+        function exportSaveFile() {
+            try {
+                const payload = {
+                    app: "TennoArsenalTracker",
+                    version: 1,
+                    exportedAt: new Date().toISOString(),
+                    progress: progressData,
+                    customItems
+                };
+                const jsonStr = JSON.stringify(payload, null, 2);
+                const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                const stamp = new Date().toISOString().slice(0, 10);
+                link.href = url;
+                link.download = `warframe-arsenal-${stamp}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                setBanner(I18N[lang].statusExported, "success");
+            } catch (err) {
+                setBanner("Erreur lors de l'exportation JSON.", "error");
+            }
+        }
+
+        function importSaveFile(event) {
+            const input = event.target;
+            const file = input && input.files && input.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    const parsed = JSON.parse(e.target.result);
-                    const loaded = parsed.progress || parsed;
-                    if (!loaded || typeof loaded !== "object" || Array.isArray(loaded)) {
-                        throw new Error("Invalid format");
+                    const parsed = JSON.parse(String(e.target.result || ""));
+                    if (!parsed || typeof parsed !== "object") {
+                        throw new Error("Invalid root");
                     }
-                    progressMap = loaded;
-                    saveState();
+
+                    const incomingProgress = parsed.progress && typeof parsed.progress === "object" && !Array.isArray(parsed.progress)
+                        ? parsed.progress
+                        : (!Array.isArray(parsed) ? parsed : null);
+
+                    if (!incomingProgress) {
+                        throw new Error("Missing progress map");
+                    }
+
+                    const sanitized = {};
+                    Object.keys(incomingProgress).forEach(k => {
+                        const val = incomingProgress[k];
+                        if (val === "owned" || val === "mastered") {
+                            sanitized[k] = val;
+                        }
+                    });
+
+                    progressData = sanitized;
+                    if (Array.isArray(parsed.customItems)) {
+                        customItems = parsed.customItems.filter(it => it && typeof it.id === "string" && typeof it.nameFr === "string");
+                        persistCustomItems();
+                    }
+
+                    persistProgress();
                     renderAll();
-                    showToast(TRANSLATIONS[currentLang].toastImported, "orokin");
+                    setBanner(I18N[lang].statusImported(Object.keys(sanitized).length), "success");
                 } catch (err) {
-                    showToast(TRANSLATIONS[currentLang].toastImportErr, "cyan");
+                    setBanner(I18N[lang].statusImportError, "error");
+                } finally {
+                    input.value = "";
                 }
-                event.target.value = "";
             };
+
+            reader.onerror = () => {
+                setBanner(I18N[lang].statusImportError, "error");
+                input.value = "";
+            };
+
             reader.readAsText(file);
         }
 
-        function showToast(message, variant = "cyan") {
-            const container = document.getElementById("toast-container");
-            const toast = document.createElement("div");
-            toast.className = `toast ${variant === "orokin" ? "orokin" : ""}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = "0";
-                toast.style.transition = "opacity 0.25s ease";
-                setTimeout(() => toast.remove(), 260);
-            }, 2500);
-        }
-
-        function escapeHtml(str) {
-            return String(str || "")
+        /* =====================================================================
+           9. ESCAPE UTILITIES & STARTUP
+           ===================================================================== */
+        function escapeHtml(value) {
+            return String(value ?? "")
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(/'/g, "&#39;");
         }
 
-        function escapeAttr(str) {
-            return escapeHtml(str);
+        function escapeAttr(value) {
+            return escapeHtml(value);
         }
 
-        // Launch immediately when DOM is ready
         if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initApp);
+            document.addEventListener("DOMContentLoaded", bootTracker);
         } else {
-            initApp();
+            bootTracker();
         }
     </script>
 </body>
